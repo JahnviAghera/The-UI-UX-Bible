@@ -1,0 +1,1372 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>The UI/UX Bible</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&family=Playfair+Display:wght@600&family=Inter:wght@400;500;600&family=DM+Serif+Display&family=DM+Sans:wght@400;500&family=Libre+Baskerville:wght@400;700&family=Source+Sans+3:wght@400;600&display=swap">
+<style>
+/* Layout: a book in four parts. Each chapter = rule, live drawn figures, notes.
+   Visual language = designer redlines: Figma selection blue + measurement magenta.
+   Source tags: FEED (creators you follow) vs CANON (NN/g, Apple, W3C, Material). */
+:root{
+  --paper:#EDF0F4; --page:#FFFFFF; --ink:#151821; --ink-2:#4A5163; --line:#D5DAE3;
+  --select:#0D7FE0; --redline:#E3266F; --good:#13A36B; --warn:#E9A100; --bad:#E0483B;
+  --tint:#E3EDF9; --canon:#6B45C9; --canon-tint:#EEE8FB;
+  --display:"Bricolage Grotesque", "Arial Narrow", system-ui, sans-serif;
+  --body:"Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, Menlo, monospace;
+  --s1:4px; --s2:8px; --s3:16px; --s4:24px; --s5:32px; --s6:48px; --s7:72px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#0F1218; --page:#171B24; --ink:#EEF1F6; --ink-2:#A6AEBF; --line:#2B3240;
+  --select:#4AA8FF; --redline:#FF5C9A; --good:#3CCB8F; --warn:#F5BE3A; --bad:#FF6F63; --tint:#1D2A3D;
+  --canon:#B79CFF; --canon-tint:#2A2342; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#0F1218; --page:#171B24; --ink:#EEF1F6; --ink-2:#A6AEBF; --line:#2B3240;
+  --select:#4AA8FF; --redline:#FF5C9A; --good:#3CCB8F; --warn:#F5BE3A; --bad:#FF6F63; --tint:#1D2A3D;
+  --canon:#B79CFF; --canon-tint:#2A2342; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font:16px/1.6 var(--body);
+  padding-left:max(16px, env(safe-area-inset-left,0px));padding-right:max(16px, env(safe-area-inset-right,0px));padding-block:0 var(--s7)}
+.book{max-width:1120px;margin:0 auto}
+h1,h2,h3,h4{font-family:var(--display);line-height:1.1;text-wrap:balance;margin:0}
+p{margin:0;max-width:65ch}
+a{color:var(--select)}
+.mono{font-family:var(--mono);font-size:12px;letter-spacing:.02em}
+.label{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--ink-2)}
+.muted{color:var(--ink-2)}
+:focus-visible{outline:2px solid var(--select);outline-offset:2px}
+.src{display:inline-flex;align-items:center;gap:4px;font:600 10px var(--mono);letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:3px;vertical-align:middle;white-space:nowrap}
+.src.feed{background:var(--tint);color:var(--select)}
+.src.canon{background:var(--canon-tint);color:var(--canon)}
+.cite{font:11px var(--mono);color:var(--ink-2)}
+.cite a{color:var(--ink-2)}
+
+/* cover */
+.cover{padding-block:var(--s7) var(--s5);display:grid;gap:var(--s4)}
+.cover h1{font-size:clamp(52px,11vw,140px);font-weight:800;letter-spacing:-.035em}
+.cover h1 .sel{position:relative;display:inline-block;padding:0 .08em}
+.cover h1 .sel::after{content:"";position:absolute;inset:-2px;border:2px solid var(--select);pointer-events:none}
+.cover h1 .sel i{position:absolute;width:9px;height:9px;background:var(--page);border:2px solid var(--select)}
+.cover h1 .sel i:nth-child(1){left:-6px;top:-6px}.cover h1 .sel i:nth-child(2){right:-6px;top:-6px}
+.cover h1 .sel i:nth-child(3){left:-6px;bottom:-6px}.cover h1 .sel i:nth-child(4){right:-6px;bottom:-6px}
+.cover .size{position:absolute;left:50%;transform:translateX(-50%);bottom:-30px;background:var(--select);color:#fff;font:600 11px var(--mono);padding:2px 6px;border-radius:3px;letter-spacing:0;white-space:nowrap}
+.cover .lede{font-size:clamp(17px,2vw,20px);color:var(--ink-2);max-width:60ch;margin-top:var(--s3)}
+.voices{display:flex;flex-wrap:wrap;gap:var(--s2)}
+.voice{background:var(--page);border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-size:14px}
+.key{display:flex;flex-wrap:wrap;gap:var(--s3);align-items:center;font-size:14px;color:var(--ink-2)}
+
+/* contents */
+.toc{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:var(--s4);margin-block:var(--s4) var(--s7)}
+.toc-part{display:grid;gap:2px;align-content:start}
+.toc-part > .label{margin-bottom:6px;color:var(--redline)}
+.toc a{background:var(--page);border:1px solid var(--line);border-radius:4px;padding:8px 12px;text-decoration:none;color:var(--ink);display:grid;grid-template-columns:28px 1fr;gap:6px;align-items:baseline}
+.toc a:hover{background:var(--tint)}
+.toc a span:first-child{font:600 11px var(--mono);color:var(--select)}
+.toc a span:last-child{font-family:var(--display);font-weight:600;font-size:16px;line-height:1.25}
+
+.part{padding-block:var(--s6) var(--s4);display:grid;gap:6px}
+.part .label{color:var(--redline)}
+.part h2{font-size:clamp(32px,5vw,56px);font-weight:800;letter-spacing:-.03em}
+
+/* chapter */
+.ch{background:var(--page);border:1px solid var(--line);border-radius:6px;margin-bottom:var(--s5);overflow:hidden}
+.ch-head{display:grid;grid-template-columns:auto 1fr;gap:var(--s4);padding:var(--s5) var(--s5) var(--s4);align-items:end;border-bottom:1px dashed var(--line)}
+.ch-num{font:800 clamp(56px,8vw,104px)/.8 var(--display);color:var(--select);letter-spacing:-.04em}
+.ch-head h2{font-size:clamp(26px,3.6vw,42px);font-weight:800;letter-spacing:-.02em}
+.ch-head .rule{margin-top:var(--s2);font-size:18px;color:var(--ink-2)}
+.ch-body{padding:var(--s5);display:grid;gap:var(--s6)}
+.spread{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.35fr);gap:var(--s5);align-items:start}
+.spread.flip{grid-template-columns:minmax(0,1.35fr) minmax(0,1fr)}
+.spread.even{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+@media (max-width:820px){.spread,.spread.flip,.spread.even{grid-template-columns:minmax(0,1fr)}.ch-head{grid-template-columns:1fr}.ch-body,.ch-head{padding:var(--s4) var(--s3)}}
+.notes{display:grid;gap:var(--s3);min-width:0}
+.notes h3{font-size:22px;font-weight:600}
+.notes ul,.notes ol{margin:0;padding-left:20px;display:grid;gap:6px}
+.quote{border-left:3px solid var(--redline);padding-left:var(--s3);font-family:var(--display);font-size:19px;line-height:1.35}
+.quote cite{display:block;font:normal 12px var(--mono);color:var(--ink-2);margin-top:6px}
+.fig{background:var(--paper);border-radius:4px;padding:var(--s4);display:grid;gap:var(--s3);min-width:0;margin:0}
+.fig-cap{font:12px/1.5 var(--mono);color:var(--ink-2)}
+.fig-cap b{color:var(--redline);font-weight:600}
+.scroll{overflow-x:auto}
+.try{background:var(--tint);border-radius:6px;padding:var(--s3) var(--s4);display:grid;gap:6px}
+.try .label{color:var(--select)}
+table.t{border-collapse:collapse;width:100%;font-size:14px}
+table.t th{text-align:left;font:600 11px var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--ink-2);padding:6px 10px;border-bottom:1px solid var(--line)}
+table.t td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+table.t td.n{font-variant-numeric:tabular-nums;font-family:var(--mono);font-size:13px;white-space:nowrap}
+
+/* controls */
+.ctrl{display:flex;flex-wrap:wrap;gap:var(--s2);align-items:center}
+.seg{display:inline-flex;flex-wrap:wrap;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--page)}
+.seg button{font:500 13px var(--body);border:0;background:transparent;color:var(--ink);padding:6px 12px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--select);color:#fff}
+input[type=range]{accent-color:var(--select);width:min(260px,100%)}
+.chip{display:inline-block;font:600 11px var(--mono);padding:2px 8px;border-radius:999px;color:#fff}
+.chip.g{background:var(--good)}.chip.b{background:var(--bad)}.chip.w{background:var(--warn);color:#1a1300}
+
+/* cards grid (heuristics, laws) */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:var(--s2)}
+.hcard{background:var(--page);border:1px solid var(--line);border-radius:6px;padding:12px;display:grid;gap:4px;text-align:left;font:inherit;color:inherit;cursor:pointer}
+.hcard b{font:600 15px/1.25 var(--display)}
+.hcard .n{font:600 11px var(--mono);color:var(--canon)}
+.hcard[aria-expanded="true"]{border-color:var(--canon);box-shadow:0 0 0 1px var(--canon)}
+.hcard .more{font-size:13px;color:var(--ink-2)}
+.hcard .more[hidden]{display:none}
+.hcard .ex{font-size:12px;color:var(--ink-2);font-style:italic}
+
+/* planes + shelf */
+.planes{display:grid;gap:4px}
+.plane{display:grid;grid-template-columns:110px 1fr;gap:var(--s3);align-items:center;padding:10px var(--s3);border-radius:4px;color:#fff;font-size:14px}
+.plane b{font-family:var(--display);font-size:18px}
+.shelf{display:flex;gap:6px;align-items:flex-end;overflow-x:auto;padding-bottom:4px}
+.spine{flex:0 0 auto;width:62px;border-radius:3px 3px 0 0;padding:10px 6px;writing-mode:vertical-rl;transform:rotate(180deg);font:600 13px var(--display);color:#fff;cursor:pointer;border:0;text-align:left}
+.spine[aria-pressed="true"]{outline:3px solid var(--redline);outline-offset:2px}
+.book-note{background:var(--page);border:1px solid var(--line);border-radius:4px;padding:var(--s3);min-height:96px}
+
+/* gestalt */
+.gest{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:var(--s3)}
+.g{background:var(--page);border:1px solid var(--line);border-radius:6px;padding:12px;display:grid;gap:8px}
+.g svg{width:100%;height:auto;max-height:110px}
+.g b{font:600 15px var(--display)}
+.g p{font-size:13px;color:var(--ink-2)}
+.fpat{position:relative;background:var(--page);border:1px solid var(--line);border-radius:6px;padding:14px;display:grid;gap:7px;overflow:hidden}
+.fpat .tl{height:7px;border-radius:3px;background:var(--line)}
+.fpat .hm{position:absolute;inset:0;pointer-events:none}
+
+/* spacing */
+.demo-card{background:var(--page);border:1px solid var(--line);border-radius:10px;padding:calc(var(--k)*16px);display:grid;gap:calc(var(--k)*8px);position:relative;max-width:360px;transition:all .25s}
+.demo-card .img{height:110px;border-radius:8px;background:linear-gradient(135deg,#F2A65A,#E2553F 60%,#7C2E3A)}
+.demo-card h4{margin:0;font:600 20px/1.2 var(--display)}
+.demo-card p{font-size:14px;line-height:calc(1.15 + var(--k)*.2);color:var(--ink-2)}
+.demo-card .btn{justify-self:start;background:var(--ink);color:var(--page);border-radius:8px;padding:10px 16px;font-weight:600;font-size:14px}
+.red{position:absolute;font:600 10px var(--mono);color:var(--redline);display:flex;align-items:center;gap:2px;pointer-events:none}
+.red.pad{left:2px;top:0;height:calc(var(--k)*16px);border-left:1px solid var(--redline);padding-left:3px}
+.red.gap{right:6px;top:calc(var(--k)*16px + 110px);height:calc(var(--k)*8px);border-left:1px solid var(--redline);padding-left:3px}
+.scale{display:grid;gap:6px}
+.scale div{display:grid;grid-template-columns:44px 1fr;align-items:center;gap:var(--s2)}
+.scale span:last-child{height:12px;background:var(--redline);opacity:.85;border-radius:2px}
+.bad-good{display:grid;grid-template-columns:1fr 1fr;gap:var(--s3)}
+.form-demo{background:var(--page);border:1px solid var(--line);border-radius:8px;padding:var(--s3);display:grid}
+.form-demo .lb{font-size:13px;font-weight:600}
+.form-demo .in{height:36px;border:1px solid var(--line);border-radius:6px;background:var(--paper)}
+
+/* type */
+.pairs{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:var(--s3)}
+.pair{background:var(--page);border:1px solid var(--line);border-radius:6px;padding:var(--s3);display:grid;gap:6px}
+.pair .h{font-size:26px;line-height:1.1}
+.pair .b{font-size:14px;color:var(--ink-2)}
+.ladder{display:grid;gap:2px}
+.ladder div{display:grid;grid-template-columns:170px 1fr;align-items:baseline;gap:var(--s3);border-bottom:1px dashed var(--line);padding:4px 0;min-width:0}
+.ladder div span:last-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.overlay{border-radius:8px;height:170px;position:relative;overflow:hidden;background:linear-gradient(140deg,#F6D7A7,#F1B06A 40%,#C9603B 75%,#5B2B24)}
+.overlay::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,var(--g)) 0%,rgba(0,0,0,0) 65%)}
+.overlay span{position:absolute;left:14px;bottom:12px;z-index:1;color:#fff;font:600 18px var(--body)}
+.measure{background:var(--page);border:1px solid var(--line);border-radius:6px;padding:var(--s3);font-size:15px;line-height:1.6;transition:max-width .2s}
+.measure-wrap{overflow:hidden}
+
+/* color */
+.six{display:flex;height:56px;border-radius:6px;overflow:hidden;font:600 12px var(--mono)}
+.six div{display:flex;align-items:center;padding-left:10px}
+.mini-ui{background:#fff;color:#222;border-radius:10px;padding:14px;display:grid;gap:10px;max-width:300px;border:1px solid #e3e3e3}
+.mini-ui .row{height:10px;border-radius:4px;background:#ECEEF2}
+.mini-ui .cta{background:#D9393E;color:#fff;border-radius:8px;padding:9px;text-align:center;font-weight:600;font-size:13px}
+.mini-ui .sec{background:#FBEFE3;border-radius:8px;padding:10px;font-size:12px;color:#5c3a2b}
+.contrast{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:var(--s3);align-items:stretch}
+.sample{border-radius:6px;padding:var(--s3);display:grid;gap:4px;border:1px solid var(--line)}
+.sample .big{font:600 24px var(--display)}
+.ratio{font:800 40px/1 var(--display)}
+.psy{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s2)}
+.psy div{border-radius:6px;padding:var(--s3) 12px;color:#fff;font-size:13px;min-height:96px;display:grid;align-content:end;gap:2px}
+.psy b{font-family:var(--display);font-size:18px}
+@media (max-width:520px){.psy{grid-template-columns:1fr}}
+.darkdemo{display:grid;grid-template-columns:1fr 1fr;gap:var(--s3)}
+.dd{border-radius:10px;padding:14px;display:grid;gap:8px;font-size:13px}
+.dd .card{border-radius:8px;padding:10px}
+.dd .acc{border-radius:8px;padding:8px;text-align:center;font-weight:600}
+
+/* thumb + targets */
+.phone{width:220px;height:440px;border-radius:34px;border:10px solid var(--ink);position:relative;overflow:hidden;background:#fff;flex:0 0 auto}
+.zone{position:absolute;left:0;right:0}
+.phone .bar{position:absolute;left:12px;right:12px;height:44px;border-radius:12px;background:#D9393E;color:#fff;font:600 13px var(--body);display:flex;align-items:center;justify-content:center;transition:top .35s;box-shadow:0 6px 18px rgba(0,0,0,.25)}
+.phone .ln{position:absolute;left:16px;right:16px;height:8px;border-radius:4px;background:rgba(0,0,0,.12)}
+.thumb-wrap{display:flex;gap:var(--s4);flex-wrap:wrap;align-items:center}
+.legend{display:grid;gap:8px;font-size:14px;min-width:0;flex:1 1 200px}
+.legend div{display:grid;grid-template-columns:14px 1fr;gap:8px;align-items:start}
+.legend i{width:14px;height:14px;border-radius:3px;margin-top:4px}
+.targets{display:flex;gap:var(--s4);align-items:flex-end;flex-wrap:wrap}
+.tg{display:grid;justify-items:center;gap:6px;font:12px var(--mono);color:var(--ink-2);text-align:center}
+.tg div{border:2px dashed var(--redline);border-radius:6px;display:grid;place-items:center;background:var(--page)}
+.tg div span{width:14px;height:14px;border-radius:50%;background:var(--ink)}
+
+/* states */
+.states{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:var(--s3)}
+.st{display:grid;gap:6px;justify-items:start}
+.sbtn{font:600 14px var(--body);border-radius:8px;padding:10px 16px;border:0;background:#D9393E;color:#fff;min-height:44px;display:inline-flex;align-items:center;gap:8px}
+.spin{width:14px;height:14px;border-radius:50%;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;animation:sp 0.8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.timeline{display:grid;grid-template-columns:1fr 1fr 1fr;border-radius:6px;overflow:hidden;font-size:13px}
+.timeline div{padding:12px;display:grid;gap:4px}
+.timeline b{font:800 26px/1 var(--display)}
+.load{display:grid;gap:var(--s2)}
+.skel{background:var(--page);border:1px solid var(--line);border-radius:8px;padding:12px;display:grid;gap:8px;min-height:120px;align-content:start}
+.skel .sk{height:10px;border-radius:4px;background:linear-gradient(90deg,var(--line),var(--paper),var(--line));background-size:200% 100%;animation:sh 1.4s infinite}
+@keyframes sh{to{background-position:-200% 0}}
+.bar-p{height:10px;border-radius:999px;background:var(--line);overflow:hidden}
+.bar-p div{height:100%;width:62%;background:var(--select)}
+.empty{background:var(--page);border:1px dashed var(--line);border-radius:8px;padding:var(--s4);display:grid;gap:8px;justify-items:center;text-align:center}
+
+/* forms */
+.fbox{background:var(--page);border:1px solid var(--line);border-radius:8px;padding:var(--s4);display:grid;gap:var(--s3);max-width:380px}
+.field{display:grid;gap:6px}
+.field label{font-weight:600;font-size:14px}
+.field input{font:15px var(--body);height:44px;border:1.5px solid var(--line);border-radius:8px;padding:0 12px;background:var(--page);color:var(--ink)}
+.field input:focus{border-color:var(--select);outline:none;box-shadow:0 0 0 3px var(--tint)}
+.field.err input{border-color:var(--bad)}
+.field .hint{font-size:13px;color:var(--ink-2)}
+.field .msg{font-size:13px;color:var(--bad);display:flex;gap:6px;align-items:flex-start}
+.field .msg[hidden]{display:none}
+.field .ok{font-size:13px;color:var(--good)}
+.bad-input{height:44px;border:1px solid var(--line);border-radius:8px;display:flex;align-items:center;padding:0 12px;color:#A9AFBB;font-size:15px;background:var(--page)}
+.msgs{display:grid;gap:8px}
+.msg-ex{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:start;background:var(--page);border:1px solid var(--line);border-radius:6px;padding:10px 12px;font-size:14px}
+
+/* motion */
+.track{position:relative;height:46px;background:var(--page);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.dot{position:absolute;top:9px;left:8px;width:26px;height:26px;border-radius:7px;background:var(--select)}
+.curves{display:grid;gap:8px}
+.curve-row{display:grid;grid-template-columns:120px 1fr;gap:var(--s2);align-items:center}
+.curve-row .mono{font-size:11px}
+
+/* process */
+.flow{display:grid;grid-template-columns:repeat(4,minmax(150px,1fr));gap:var(--s3);min-width:640px}
+.step{background:var(--page);border:1px solid var(--line);border-radius:6px;padding:12px;font-size:13px;display:grid;gap:4px;position:relative}
+.step b{font:600 15px var(--display)}
+.step .n{font:600 11px var(--mono);color:var(--select)}
+.step:not(:nth-child(5n+5)):not(:last-child)::after{content:"→";position:absolute;right:-14px;top:50%;transform:translateY(-50%);color:var(--ink-2);font-size:14px}
+.lane{grid-column:1/-1;font:600 11px var(--mono);text-transform:uppercase;letter-spacing:.12em;padding:4px 10px;border-radius:4px;justify-self:start}
+.iters{display:flex;gap:var(--s3);overflow-x:auto;padding-bottom:6px}
+.iter{flex:0 0 190px;display:grid;gap:8px;align-content:start}
+.mphone{height:340px;border-radius:22px;border:7px solid var(--ink);overflow:hidden;position:relative;font-family:var(--body)}
+.mphone .hd{padding:10px 10px 4px;font:700 13px "Libre Baskerville",Georgia,serif}
+.mrow{display:flex;gap:6px;align-items:center;padding:6px 10px;font-size:9.5px;line-height:1.25}
+.ph{flex:0 0 auto;border-radius:6px;background:linear-gradient(135deg,#F3C27A,#D9693F 60%,#6E3326)}
+.badge{flex:0 0 auto;width:30px;height:30px;border-radius:7px;display:grid;place-items:center;font:700 8px var(--body)}
+.iter p{font-size:13px}
+.curve5{display:flex;align-items:flex-end;gap:6px;height:120px}
+.curve5 div{flex:1;background:var(--canon);border-radius:4px 4px 0 0;position:relative;opacity:.85}
+.curve5 div span{position:absolute;top:-18px;left:50%;transform:translateX(-50%);font:600 11px var(--mono);color:var(--ink)}
+
+/* stacks + components + tokens */
+.stack{border:1.5px dashed var(--select);border-radius:6px;padding:8px;display:flex;gap:8px;position:relative;padding-top:20px;min-width:0}
+.stack::before{content:attr(data-k);position:absolute;top:2px;left:6px;font:600 10px var(--mono);color:var(--select)}
+.stack.v{flex-direction:column}
+.box{background:var(--page);border:1px solid var(--line);border-radius:4px;padding:6px 8px;font-size:12px;min-width:0}
+.comp{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:var(--s3)}
+.comp .master{border:2px solid #9747FF;border-radius:6px;padding:10px;display:grid;gap:6px}
+.comp .inst{border:1px solid #9747FF;border-radius:6px;padding:10px;display:grid;gap:6px}
+.pill{border-radius:999px;padding:6px 10px;color:#fff;font-weight:600;font-size:13px;text-align:center;transition:background .3s}
+.tiers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s2);align-items:stretch}
+.tier{background:var(--page);border:1px solid var(--line);border-radius:6px;padding:12px;display:grid;gap:6px;align-content:start;position:relative}
+.tier:not(:last-child)::after{content:"→";position:absolute;right:-13px;top:40%;color:var(--ink-2)}
+.tier code{font:12px var(--mono);background:var(--paper);border-radius:3px;padding:2px 5px;word-break:break-all}
+@media (max-width:620px){.tiers{grid-template-columns:1fr}.tier::after{display:none}}
+
+/* personality */
+.widgets{display:flex;gap:var(--s3);flex-wrap:wrap}
+.w{width:150px;height:150px;border-radius:26px;padding:14px;display:grid;align-content:space-between;font-size:12px;box-shadow:0 8px 24px rgba(0,0,0,.12)}
+.w.plain{background:#F2F3F5;color:#333}
+.w.fun{background:#EDE6FF;color:#3B2774}
+.w b{font:800 30px/1 var(--display)}
+.landing{background:var(--page);border:1px solid var(--line);border-radius:8px;padding:var(--s4);display:grid;gap:var(--s3)}
+.qa{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:var(--s2)}
+.qa div{border-top:3px solid var(--select);padding-top:8px;font-size:14px}
+.qa b{display:block;font-family:var(--display);font-size:16px}
+
+/* AI */
+.prompt{border-radius:8px;padding:var(--s3);font:13px/1.55 var(--mono);border:1px solid var(--line);background:var(--page)}
+.prompt.x{border-left:4px solid var(--bad)}.prompt.ok{border-left:4px solid var(--good)}
+.lessons{display:grid;gap:var(--s2)}
+.lesson{display:grid;grid-template-columns:36px 1fr;gap:var(--s3);background:var(--page);border:1px solid var(--line);border-radius:6px;padding:12px}
+.lesson span{font:800 26px/1 var(--display);color:var(--redline)}
+.lesson b{display:block}
+pre.code{margin:0;background:#12151C;color:#DCE3EE;border-radius:6px;padding:var(--s3);font:12.5px/1.6 var(--mono);overflow-x:auto}
+pre.code .c{color:#7E8AA0}pre.code .k{color:#7CC4FF}pre.code .v{color:#FFB37A}
+
+/* portfolio */
+.board{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s3)}
+@media (max-width:620px){.board{grid-template-columns:1fr}}
+.col{background:var(--page);border:1px solid var(--line);border-radius:6px;padding:12px;display:grid;gap:8px;align-content:start}
+.sticky{padding:10px;border-radius:3px;font:600 14px var(--body);color:#2A2400}
+.skeleton{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:13px}
+.skeleton span{background:var(--tint);border-radius:999px;padding:4px 10px}
+.skeleton i{color:var(--ink-2);font-style:normal}
+
+/* checklist + tools */
+.check{display:grid;gap:6px}
+.check h4{font:600 13px var(--mono);text-transform:uppercase;letter-spacing:.1em;color:var(--ink-2);margin-top:var(--s3)}
+.check label{display:grid;grid-template-columns:22px 1fr;gap:10px;align-items:start;background:var(--page);border:1px solid var(--line);border-radius:6px;padding:10px 12px;cursor:pointer}
+.check input{width:18px;height:18px;accent-color:var(--good);margin-top:3px}
+.check label:has(input:checked){border-color:var(--good)}
+.check label:has(input:checked) span{color:var(--ink-2);text-decoration:line-through}
+.progress{height:8px;background:var(--line);border-radius:999px;overflow:hidden}
+.progress div{height:100%;background:var(--good);width:0;transition:width .3s}
+.tools{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:var(--s3)}
+.tool{border-top:2px solid var(--ink);padding-top:8px;font-size:14px}
+.tool b{display:block;font-family:var(--display);font-size:16px;margin-bottom:2px}
+.sources{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:4px var(--s4);font-size:14px}
+.sources a{text-decoration:none}
+.sources a:hover{text-decoration:underline}
+footer{color:var(--ink-2);font-size:13px;margin-top:var(--s5);display:grid;gap:6px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="book">
+
+<header class="cover">
+  <div class="label">Illustrated field guide · second edition, expanded</div>
+  <h1>The UI/UX <span class="sel"><i></i><i></i><i></i><i></i>Bible<span class="size">Fill × Hug</span></span></h1>
+  <p class="lede">Fifteen chapters in four parts. Each rule is drawn as a live figure you can poke at, with the real numbers behind it and a short exercise to practise it. The voices of designers you follow are combined with the published standards they build on.</p>
+  <div class="voices">
+    <span class="voice"><b>Cecilia Kim</b> · @ceciliakimdesign</span>
+    <span class="voice"><b>Jhanvi Bhatia</b> · @ux.wheee</span>
+    <span class="voice"><b>UI Gradient</b> · @ui_gradient</span>
+    <span class="voice">+ Nielsen Norman Group · Apple HIG · W3C WCAG 2.2 · Material Design · Laws of UX · Baymard</span>
+  </div>
+  <div class="key"><span class="src feed">Feed</span> from reels and posts by creators you follow <span class="src canon">Canon</span> from published standards and research, cited inline</div>
+</header>
+
+<nav class="toc" aria-label="Contents">
+  <div class="toc-part"><div class="label">Part I · How people see</div>
+    <a href="#c1"><span>01</span><span>Think before pixels</span></a>
+    <a href="#c2"><span>02</span><span>Heuristics &amp; laws</span></a>
+    <a href="#c3"><span>03</span><span>Perception &amp; hierarchy</span></a></div>
+  <div class="toc-part"><div class="label">Part II · Visual craft</div>
+    <a href="#c4"><span>04</span><span>Space fixes it</span></a>
+    <a href="#c5"><span>05</span><span>Type is contrast</span></a>
+    <a href="#c6"><span>06</span><span>Colour, light &amp; dark</span></a></div>
+  <div class="toc-part"><div class="label">Part III · Interaction</div>
+    <a href="#c7"><span>07</span><span>Thumbs &amp; targets</span></a>
+    <a href="#c8"><span>08</span><span>States, feedback, loading</span></a>
+    <a href="#c9"><span>09</span><span>Forms &amp; errors</span></a>
+    <a href="#c10"><span>10</span><span>Motion</span></a>
+    <a href="#c11"><span>11</span><span>Accessibility</span></a></div>
+  <div class="toc-part"><div class="label">Part IV · Making &amp; shipping</div>
+    <a href="#c12"><span>12</span><span>Process &amp; testing</span></a>
+    <a href="#c13"><span>13</span><span>Figma &amp; design systems</span></a>
+    <a href="#c14"><span>14</span><span>Personality &amp; AI building</span></a>
+    <a href="#c15"><span>15</span><span>Portfolio &amp; career</span></a>
+    <a href="#check"><span>✓</span><span>Checklist · Toolkit · Sources</span></a></div>
+</nav>
+
+<!-- ================= PART I ================= -->
+<div class="part"><div class="label">Part I</div><h2>How people see</h2></div>
+
+<section class="ch" id="c1">
+  <div class="ch-head"><div class="ch-num">01</div><div><h2>Think before you push pixels</h2><p class="rule">Principles first, tools second. Meet users' expectations, then innovate.</p></div></div>
+  <div class="ch-body">
+    <div class="spread">
+      <div class="notes">
+        <h3>Five planes of every product <span class="src canon">Canon</span></h3>
+        <p>Jesse James Garrett's model: every visual decision on the surface rests on the layers below it. When a screen feels wrong, find the lowest broken layer. A colour problem is sometimes really a scope problem.</p>
+        <div class="quote">"I spent way too much time trying to master tools before understanding basic design principles."<cite>Cecilia Kim <span class="src feed">Feed</span></cite></div>
+        <h3>Five mindset shifts <span class="src feed">Feed</span></h3>
+        <ol>
+          <li>Learn colour, type and hierarchy before Figma shortcuts.</li>
+          <li>Collect designs you love every day and write down <em>why</em> each one works.</li>
+          <li>Make something small daily, even a single button or palette.</li>
+          <li>Feedback is gold, not criticism. Show work early.</li>
+          <li>Your own perspective is your edge. Stop copying trends.</li>
+        </ol>
+      </div>
+      <figure class="fig">
+        <div class="planes" aria-label="Five planes, top to bottom">
+          <div class="plane" style="background:#0D7FE0"><b>Surface</b><span>What it looks like: colour, type, imagery</span></div>
+          <div class="plane" style="background:#2A68C9"><b>Skeleton</b><span>Placement of buttons, panels, navigation</span></div>
+          <div class="plane" style="background:#4252A8"><b>Structure</b><span>Flows and information architecture</span></div>
+          <div class="plane" style="background:#4E3E88"><b>Scope</b><span>Which features and content exist</span></div>
+          <div class="plane" style="background:#4A2E66"><b>Strategy</b><span>User needs + business goals</span></div>
+        </div>
+        <figcaption class="fig-cap"><b>Read bottom → top.</b> Abstract at the base, concrete at the surface. From <i>The Elements of User Experience</i>.</figcaption>
+      </figure>
+    </div>
+    <div class="spread flip">
+      <figure class="fig">
+        <div class="label">Cecilia's starter shelf: tap a spine</div>
+        <div class="shelf" id="shelf"></div>
+        <div class="book-note" id="bookNote" aria-live="polite"></div>
+      </figure>
+      <div class="notes">
+        <h3>Read in this order <span class="src feed">Feed</span></h3>
+        <p>Start with Krug: it takes about two hours and pays off right away. Then read Norman for the psychology, and build from there.</p>
+        <div class="quote">"Meet those expectations first, then innovate. Don't reinvent the wheel when it works."<cite>Cecilia Kim, Mealmate redesign</cite></div>
+        <div class="try"><span class="label">Try it</span><p>Open three apps you use daily. For each, write one sentence about a decision on each plane, from strategy up to surface.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="ch" id="c2">
+  <div class="ch-head"><div class="ch-num">02</div><div><h2>Heuristics &amp; laws</h2><p class="rule">Ten heuristics to audit any screen, and the psychology that explains why they work.</p></div></div>
+  <div class="ch-body">
+    <div class="notes">
+      <h3>Nielsen's 10 usability heuristics <span class="src canon">Canon</span></h3>
+      <p>These are the standard checklist for a heuristic review, where you walk a screen and note each violation. Tap a card to see the real-world analogy NN/g uses.</p>
+      <div class="cards" id="heur"></div>
+      <p class="cite">Source: <a href="https://www.nngroup.com/articles/ten-usability-heuristics/" target="_blank" rel="noopener">NN/g, 10 Usability Heuristics for User Interface Design</a></p>
+    </div>
+    <div class="notes">
+      <h3>The laws you'll use most <span class="src canon">Canon</span></h3>
+      <p>Jon Yablonski's <i>Laws of UX</i> (on Cecilia's shelf) collects 30 of these. Here are the 14 that come up in everyday screen design, each with what it means for your next layout.</p>
+      <div class="cards" id="laws"></div>
+      <p class="cite">Source: <a href="https://lawsofux.com/" target="_blank" rel="noopener">lawsofux.com</a></p>
+    </div>
+    <div class="try"><span class="label">Try it</span><p>Run a heuristic review of your attendance app. Give each of the 10 heuristics one line: pass, or the violation and its fix. Rank the fixes by severity.</p></div>
+  </div>
+</section>
+
+<section class="ch" id="c3">
+  <div class="ch-head"><div class="ch-num">03</div><div><h2>Perception &amp; hierarchy</h2><p class="rule">People group what's close and alike, and scan before they read. Design for both.</p></div></div>
+  <div class="ch-body">
+    <div class="notes">
+      <h3>Gestalt grouping, drawn <span class="src canon">Canon</span></h3>
+      <div class="gest">
+        <div class="g"><svg viewBox="0 0 160 70" aria-label="Proximity"><g fill="var(--select)">
+          <circle cx="15" cy="20" r="7"/><circle cx="35" cy="20" r="7"/><circle cx="15" cy="45" r="7"/><circle cx="35" cy="45" r="7"/>
+          <circle cx="95" cy="20" r="7"/><circle cx="115" cy="20" r="7"/><circle cx="135" cy="20" r="7"/><circle cx="95" cy="45" r="7"/><circle cx="115" cy="45" r="7"/><circle cx="135" cy="45" r="7"/></g></svg>
+          <b>Proximity</b><p>Close items read as one group. Proximity beats colour and shape.</p></div>
+        <div class="g"><svg viewBox="0 0 160 70" aria-label="Similarity"><g>
+          <circle cx="20" cy="20" r="7" fill="var(--select)"/><rect x="43" y="13" width="14" height="14" fill="var(--redline)"/><circle cx="80" cy="20" r="7" fill="var(--select)"/><rect x="103" y="13" width="14" height="14" fill="var(--redline)"/><circle cx="140" cy="20" r="7" fill="var(--select)"/>
+          <rect x="13" y="38" width="14" height="14" fill="var(--redline)"/><circle cx="50" cy="45" r="7" fill="var(--select)"/><rect x="73" y="38" width="14" height="14" fill="var(--redline)"/><circle cx="110" cy="45" r="7" fill="var(--select)"/><rect x="133" y="38" width="14" height="14" fill="var(--redline)"/></g></svg>
+          <b>Similarity</b><p>Things that look alike seem to work alike. Keep every link one style.</p></div>
+        <div class="g"><svg viewBox="0 0 160 70" aria-label="Common region"><rect x="5" y="8" width="70" height="54" rx="8" fill="none" stroke="var(--ink-2)" stroke-width="1.5"/><g fill="var(--select)"><circle cx="25" cy="35" r="7"/><circle cx="55" cy="35" r="7"/><circle cx="95" cy="35" r="7"/><circle cx="125" cy="35" r="7"/><circle cx="150" cy="35" r="7"/></g></svg>
+          <b>Common region</b><p>A shared container (card, background) groups items more strongly than spacing alone.</p></div>
+        <div class="g"><svg viewBox="0 0 160 70" aria-label="Uniform connectedness"><line x1="20" y1="35" x2="60" y2="35" stroke="var(--ink-2)" stroke-width="2"/><g fill="var(--select)"><circle cx="20" cy="35" r="7"/><circle cx="60" cy="35" r="7"/><circle cx="100" cy="35" r="7"/><circle cx="140" cy="35" r="7"/></g></svg>
+          <b>Connectedness</b><p>A line between items (steppers, timelines) beats every other grouping cue.</p></div>
+        <div class="g"><svg viewBox="0 0 160 70" aria-label="Isolation effect"><g fill="var(--line)"><rect x="10" y="22" width="22" height="26" rx="4"/><rect x="40" y="22" width="22" height="26" rx="4"/><rect x="100" y="22" width="22" height="26" rx="4"/><rect x="130" y="22" width="22" height="26" rx="4"/></g><rect x="70" y="22" width="22" height="26" rx="4" fill="var(--redline)"/></svg>
+          <b>Von Restorff</b><p>The one that differs gets remembered. Give the primary CTA that role, and only that.</p></div>
+      </div>
+      <p class="cite">Sources: <a href="https://www.nngroup.com/articles/gestalt-proximity/" target="_blank" rel="noopener">NN/g, Proximity Principle in Visual Design</a> · <a href="https://lawsofux.com/" target="_blank" rel="noopener">Laws of UX</a></p>
+    </div>
+    <div class="spread">
+      <div class="notes">
+        <h3>People scan in an F <span class="src canon">Canon</span></h3>
+        <p>On text-heavy pages, eyes sweep across the top, sweep a shorter line lower down, then drop down the left edge. Words on the right and further down get skipped. NN/g found this pattern on desktop and mobile alike.</p>
+        <p class="label" style="margin-top:4px">Other scanning patterns</p>
+        <ul>
+          <li><b>Layer-cake:</b> reading headings only. Make headings carry the meaning.</li>
+          <li><b>Spotted:</b> hunting for numbers, links or keywords.</li>
+          <li><b>Marking:</b> eyes fixed in one spot while thumbs scroll (common on mobile).</li>
+          <li><b>Bypassing:</b> skipping list items that start with the same words.</li>
+        </ul>
+        <p class="cite">Source: <a href="https://www.nngroup.com/articles/f-shaped-pattern-reading-web-content/" target="_blank" rel="noopener">NN/g, F-Shaped Pattern of Reading on the Web</a></p>
+      </div>
+      <figure class="fig">
+        <div class="ctrl"><div class="seg" role="group" aria-label="Layout"><button id="fBad" aria-pressed="true">Wall of text</button><button id="fGood" aria-pressed="false">Designed for scanning</button></div></div>
+        <div class="fpat" id="fpat"></div>
+        <figcaption class="fig-cap" id="fcap"></figcaption>
+      </figure>
+    </div>
+    <div class="notes">
+      <h3>Building hierarchy: six dials</h3>
+      <div class="cards">
+        <div class="hcard" style="cursor:default"><span class="n">SIZE</span><b>Bigger = first</b><span class="more">Use a clear ratio between levels (e.g. 34 → 22 → 17 pt in iOS), not 16 vs 17.</span></div>
+        <div class="hcard" style="cursor:default"><span class="n">WEIGHT</span><b>Few weights</b><span class="more">Regular + semibold covers most UIs. "Too many font weights = visual chaos." (Cecilia)</span></div>
+        <div class="hcard" style="cursor:default"><span class="n">COLOUR</span><b>Grey de-emphasises</b><span class="more">Use secondary text in muted grey, and save the accent for the one action.</span></div>
+        <div class="hcard" style="cursor:default"><span class="n">SPACE</span><b>Space separates</b><span class="more">Keep a heading closer to its own text than to the section above it.</span></div>
+        <div class="hcard" style="cursor:default"><span class="n">POSITION</span><b>Top-left wins</b><span class="more">Put the most important content where the F starts.</span></div>
+        <div class="hcard" style="cursor:default"><span class="n">CONTAINERS</span><b>Cards group</b><span class="more">Use common region sparingly. If everything is a card, nothing stands out.</span></div>
+      </div>
+      <div class="try"><span class="label">Try it</span><p>Take a screenshot of any screen and blur it heavily, or squint at it. Whatever you still see first is your real hierarchy. Does it match what matters most?</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PART II ================= -->
+<div class="part"><div class="label">Part II</div><h2>Visual craft</h2></div>
+
+<section class="ch" id="c4">
+  <div class="ch-head"><div class="ch-num">04</div><div><h2>When it feels off, add space</h2><p class="rule">Change padding, line height and section margins before you touch colour or fonts.</p></div></div>
+  <div class="ch-body">
+    <div class="spread">
+      <div class="notes">
+        <h3>The three-dial fix <span class="src feed">Feed</span></h3>
+        <p>This was Cecilia's biggest mistake in her first freelance year. She swapped colours and fonts for hours when the real problem was that everything sat too close together. Keep the design, font, colour and content the same, and change only:</p>
+        <ul><li><b>Padding</b> around each element</li><li><b>Line height</b> in the text</li><li><b>Margin</b> between sections</li></ul>
+        <div class="quote">"White space is not wasted space. It gives your eye a place to rest."<cite>Cecilia Kim</cite></div>
+      </div>
+      <figure class="fig">
+        <div class="ctrl"><label for="spaceK" class="label">Space</label><input id="spaceK" type="range" min="0.4" max="1.6" step="0.05" value="0.45"><span class="mono" id="spaceOut"></span></div>
+        <div class="demo-card" id="demoCard" style="--k:.45">
+          <span class="red pad" id="rPad"></span>
+          <div class="img" role="img" aria-label="Food photo placeholder"></div>
+          <span class="red gap" id="rGap"></span>
+          <h4>Roasted tomato soup</h4>
+          <p>Slow-roasted tomatoes, garlic and basil, blended smooth. Ready in 35 minutes and freezes well for the week.</p>
+          <span class="btn">Add to menu</span>
+        </div>
+        <figcaption class="fig-cap">Same content, font and colour. Only spacing changes. <b>Magenta</b> = redline measurements, snapped to the 4px grid.</figcaption>
+      </figure>
+    </div>
+    <div class="spread flip">
+      <figure class="fig">
+        <div class="label">The spacing scale: every value a multiple of 4</div>
+        <div class="scale" id="scale"></div>
+        <div class="bad-good">
+          <div><span class="chip b">Random</span><p class="mono" style="margin-top:6px">padding: 13px 50px<br>gap: 7px · 19px · 22px</p></div>
+          <div><span class="chip g">System</span><p class="mono" style="margin-top:6px">padding: 16px 24px<br>gap: 8px · 16px · 24px</p></div>
+        </div>
+      </figure>
+      <div class="notes">
+        <h3>Cleaner screens, quieter details <span class="src feed">Feed</span></h3>
+        <ul>
+          <li>Use 4px steps on mobile (Cecilia: "makes developer handoff seamless"), or 8px steps. Pick one and stick to it.</li>
+          <li>Swap pure black for <b>dark grey</b>: it's warmer and less harsh.</li>
+          <li>Set dividers to <b>10% opacity</b>, or delete them and let images separate rows.</li>
+          <li>Don't centre everything. Align to a layout grid.</li>
+          <li>Bigger images need bigger titles, or proportions break.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="spread">
+      <div class="notes">
+        <h3>Internal ≤ external <span class="src canon">Canon</span></h3>
+        <p>Proximity in practice: the space <em>inside</em> a group must be smaller than the space <em>between</em> groups. NN/g's example is the form label. A label that sits halfway between two fields belongs to neither.</p>
+        <p class="cite">Source: <a href="https://www.nngroup.com/articles/gestalt-proximity/" target="_blank" rel="noopener">NN/g, Proximity Principle</a></p>
+        <div class="ctrl"><div class="seg" role="group" aria-label="Label spacing"><button id="pxBad" aria-pressed="true">Equal gaps</button><button id="pxGood" aria-pressed="false">4 / 24 rule</button></div></div>
+      </div>
+      <figure class="fig">
+        <div class="form-demo" id="pxForm"></div>
+        <figcaption class="fig-cap" id="pxCap"></figcaption>
+      </figure>
+    </div>
+    <div class="try"><span class="label">Try it</span><p>Screenshot one of your own screens. Redline every gap in Figma. Snap each to 4/8/16/24/32, then double the section gaps. Compare the two side by side.</p></div>
+  </div>
+</section>
+
+<section class="ch" id="c5">
+  <div class="ch-head"><div class="ch-num">05</div><div><h2>Type works through contrast</h2><p class="rule">Use two fonts at most: serif for headings, sans for body. Then set a scale and a line length.</p></div></div>
+  <div class="ch-body">
+    <div class="spread">
+      <div class="notes">
+        <h3>Why pairs fail <span class="src feed">Feed</span></h3>
+        <p>When two fonts are too similar, the eye doesn't know where to look first. There's no hierarchy, so the design feels flat even when the layout is solid.</p>
+        <div class="ctrl"><div class="seg" role="group" aria-label="Pairing"><button id="pBad" aria-pressed="false">Two similar sans</button><button id="pGood" aria-pressed="true">Serif + sans</button></div></div>
+        <div class="pair" style="max-width:360px">
+          <div class="h" id="pdH">Your weekly menu</div>
+          <div class="b" id="pdB">Seven dinners planned from the recipes you saved. Swap any day with one tap.</div>
+        </div>
+      </div>
+      <figure class="fig">
+        <div class="label">Proven pairings, rendered in the real fonts</div>
+        <div class="pairs">
+          <div class="pair"><div class="h" style="font-family:'Playfair Display',serif;font-weight:600">Good evening</div><div class="b" style="font-family:Inter,sans-serif">Playfair Display + Inter. Elegant headline, neutral reading text.</div></div>
+          <div class="pair"><div class="h" style="font-family:'DM Serif Display',serif">Current reads</div><div class="b" style="font-family:'DM Sans',sans-serif">DM Serif Display + DM Sans. Same family DNA, strong contrast.</div></div>
+          <div class="pair"><div class="h" style="font-family:'Libre Baskerville',serif;font-weight:700;font-size:22px">Weekly menu</div><div class="b" style="font-family:'Source Sans 3',sans-serif">Libre Baskerville + Source Sans. Food-magazine feel (Mealmate's display face).</div></div>
+        </div>
+      </figure>
+    </div>
+    <div class="spread even">
+      <figure class="fig">
+        <div class="label">iOS Dynamic Type, default size <span class="src canon">Canon</span></div>
+        <div class="ladder scroll" id="ladderIOS"></div>
+        <figcaption class="fig-cap">Body is <b>17 pt</b> by default; the iOS minimum is <b>11 pt</b>. Source: <a href="https://developer.apple.com/design/human-interface-guidelines/typography" target="_blank" rel="noopener">Apple HIG, Typography</a></figcaption>
+      </figure>
+      <figure class="fig">
+        <div class="label">Mealmate's custom scale <span class="src feed">Feed</span></div>
+        <div class="ladder scroll" id="ladder"></div>
+        <figcaption class="fig-cap">Saved as Figma <b>text styles</b>: change one and every screen updates.</figcaption>
+      </figure>
+    </div>
+    <div class="spread">
+      <div class="notes">
+        <h3>Line length: 50–75 characters <span class="src canon">Canon</span></h3>
+        <p>Baymard recommends 50–75 characters per line. Long lines make it hard to find the start of the next one. Short lines break the reading rhythm and make people skip words. WCAG's AAA criterion 1.4.8 caps lines at 80 characters.</p>
+        <div class="ctrl"><label class="label" for="meas">Width</label><input id="meas" type="range" min="160" max="900" value="820"><span class="mono" id="measOut"></span></div>
+        <p class="cite">Source: <a href="https://baymard.com/blog/line-length-readability" target="_blank" rel="noopener">Baymard, Readability: The Optimal Line Length</a></p>
+      </div>
+      <div class="measure-wrap"><div class="measure" id="measure">Cecilia's rule for spacing applies to text too. When a paragraph feels hard to read, the fix is often not a new font but a better measure and more line height. Readers track back to the start of each line, and a very long line makes that jump unreliable, while a very short one interrupts the rhythm every few words.</div></div>
+    </div>
+    <div class="spread flip">
+      <div class="notes">
+        <h3>Text on photos <span class="src feed">Feed</span></h3>
+        <p>Add a black gradient that fades upward, so white text stays readable on any image. Many food apps on Mobbin do this.</p>
+        <div class="ctrl"><label class="label" for="gr">Gradient</label><input id="gr" type="range" min="0" max="0.8" step="0.05" value="0"></div>
+        <p class="mono muted">Train your eye: type.method.ac (kerning) · shape.method.ac (letterforms)</p>
+      </div>
+      <div class="overlay" id="ov" style="--g:0"><span>Wed · Shakshuka · 420 kcal</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="ch" id="c6">
+  <div class="ch-head"><div class="ch-num">06</div><div><h2>Colour, light &amp; dark</h2><p class="rule">Use a 60-30-10 split, check contrast, choose psychology on purpose, and design the dark theme properly.</p></div></div>
+  <div class="ch-body">
+    <div class="spread">
+      <div class="notes">
+        <h3>60 · 30 · 10 <span class="src feed">Feed</span></h3>
+        <p>60% is a dominant neutral, 30% a supporting colour, and 10% an accent you save for actions and highlights.</p>
+        <div class="six" aria-label="60 30 10 split">
+          <div style="flex:60;background:#FFFFFF;color:#333;border:1px solid #ddd">60 · neutral</div>
+          <div style="flex:30;background:#FBEFE3;color:#5c3a2b">30</div>
+          <div style="flex:10;background:#D9393E;color:#fff;padding-left:6px">10</div>
+        </div>
+        <ul>
+          <li><b>Complementary</b> (opposites, e.g. blue + orange) adds energy.</li>
+          <li><b>Analogous</b> (neighbours, e.g. blue, green, teal) feels calm.</li>
+          <li>Test colours in context: a colour can look perfect alone and wrong next to others.</li>
+        </ul>
+      </div>
+      <figure class="fig">
+        <div class="mini-ui" aria-label="Mini UI using the split">
+          <div style="font:700 15px 'Libre Baskerville',serif">This week</div>
+          <div class="sec">Tuesday · Lemon pasta · 25 min</div>
+          <div class="row" style="width:80%"></div><div class="row" style="width:60%"></div><div class="row" style="width:70%"></div>
+          <div class="cta">Generate shopping list</div>
+        </div>
+        <figcaption class="fig-cap">The accent appears <b>once</b>, on the action. That's why it gets tapped (Von Restorff).</figcaption>
+      </figure>
+    </div>
+    <div class="spread flip">
+      <figure class="fig">
+        <div class="label">Contrast checker (WCAG)</div>
+        <div class="ctrl">
+          <label class="mono" for="fgC">Text</label><input id="fgC" type="color" value="#9AA1AD">
+          <label class="mono" for="bgC">Background</label><input id="bgC" type="color" value="#FFFFFF">
+          <div class="seg" role="group" aria-label="Presets"><button data-p="#9AA1AD,#FFFFFF">Light grey</button><button data-p="#3D4350,#FFFFFF">Dark grey</button><button data-p="#FFFFFF,#D9393E">White on red</button><button data-p="#E1E1E1,#121212">Dark theme</button></div>
+        </div>
+        <div class="contrast">
+          <div class="sample" id="smp"><div class="big">Elegant, but readable?</div><div style="font-size:15px">Body text at 15px needs 4.5:1.</div></div>
+          <div class="sample" style="background:var(--page)"><div class="ratio" id="ratio">-</div><div id="verdict" style="display:flex;gap:6px;flex-wrap:wrap"></div></div>
+        </div>
+        <figcaption class="fig-cap"><b>4.5 : 1</b> regular text · <b>3 : 1</b> large text (24px+, or 19px bold) and UI parts such as icons and input borders.</figcaption>
+      </figure>
+      <div class="notes">
+        <h3>Psychology, chosen on purpose <span class="src feed">Feed</span></h3>
+        <div class="psy">
+          <div style="background:#2563C9"><b>Blue</b>trust</div>
+          <div style="background:#16855A"><b>Green</b>fresh, growth</div>
+          <div style="background:#D9393E"><b>Red</b>urgency, appetite</div>
+        </div>
+        <div class="quote">Mealmate liked green, but chose red: "We didn't want to reinvent the psychology."<cite>Cecilia Kim, branding sprint</cite></div>
+        <p>Never let colour carry meaning alone. Pair it with an icon, a label or a shape so colour-blind users get the same message.</p>
+      </div>
+    </div>
+    <div class="spread">
+      <div class="notes">
+        <h3>Dark theme is not inverted light <span class="src canon">Canon</span></h3>
+        <ul>
+          <li>Use a <b>dark grey surface (#121212)</b>, not pure black.</li>
+          <li>Show elevation with lighter surfaces. Material adds a white overlay that grows stronger as a surface gets higher.</li>
+          <li>Use off-white text at <b>87% / 60% / 38%</b> opacity for high, medium and disabled emphasis.</li>
+          <li>Use <b>lighter, less saturated</b> accents: saturated colours "vibrate" on dark backgrounds.</li>
+        </ul>
+        <p class="cite">Source: <a href="https://codelabs.developers.google.com/codelabs/design-material-darktheme/" target="_blank" rel="noopener">Google, Design a dark theme with Material</a></p>
+      </div>
+      <figure class="fig">
+        <div class="darkdemo">
+          <div class="dd" style="background:#000;color:#fff"><span class="label" style="color:#bbb">Naive</span><div class="card" style="background:#000;border:1px solid #333">Pure black, pure white</div><div class="acc" style="background:#FF0033;color:#fff">Saturated accent</div></div>
+          <div class="dd" style="background:#121212;color:rgba(255,255,255,.87)"><span class="label" style="color:rgba(255,255,255,.6)">Considered</span><div class="card" style="background:#1E1E1E">Raised card <span style="color:rgba(255,255,255,.6)">· 60% text</span></div><div class="acc" style="background:#FF8A8A;color:#2a0606">Desaturated accent</div></div>
+        </div>
+        <figcaption class="fig-cap">Same content. The right side is easier on the eyes and shows depth.</figcaption>
+      </figure>
+    </div>
+    <div class="try"><span class="label">Try it</span><p>Build your palette as 5 tokens (bg, surface, text, muted, accent) in both themes. Run every text pair through the checker above. Fix any failure before you think about anything else.</p></div>
+  </div>
+</section>
+
+<!-- ================= PART III ================= -->
+<div class="part"><div class="label">Part III</div><h2>Interaction</h2></div>
+
+<section class="ch" id="c7">
+  <div class="ch-head"><div class="ch-num">07</div><div><h2>Thumbs &amp; targets</h2><p class="rule">Put the main action where the thumb rests, and make every target big enough to hit.</p></div></div>
+  <div class="ch-body">
+    <div class="spread">
+      <div class="notes">
+        <h3>Fitts's law <span class="src feed">Feed</span></h3>
+        <p>The time to reach a target depends on its distance and size. Closer and bigger means faster. Most people hold their phone in one hand.</p>
+        <div class="ctrl"><div class="seg" role="group" aria-label="Button position"><button id="ctaTop" aria-pressed="true">Header (before)</button><button id="ctaBot" aria-pressed="false">Floating bottom (after)</button></div></div>
+        <p id="ctaMsg" class="mono muted"></p>
+        <div class="quote">"Users can now actually tap it without having to adjust their grip."<cite>Cecilia Kim, redesign part 7</cite></div>
+      </div>
+      <figure class="fig">
+        <div class="thumb-wrap">
+          <div class="phone" aria-label="Phone with thumb zones">
+            <div class="zone" style="top:0;height:30%;background:rgba(224,72,59,.22)"></div>
+            <div class="zone" style="top:30%;height:30%;background:rgba(233,161,0,.22)"></div>
+            <div class="zone" style="top:60%;height:40%;background:rgba(19,163,107,.25)"></div>
+            <div class="ln" style="top:84px"></div><div class="ln" style="top:104px;right:60px"></div>
+            <div class="ln" style="top:150px"></div><div class="ln" style="top:170px;right:80px"></div>
+            <div class="ln" style="top:216px"></div><div class="ln" style="top:236px;right:50px"></div>
+            <div class="bar" id="ctaBar" style="top:22px">Generate list</div>
+          </div>
+          <div class="legend">
+            <div><i style="background:var(--good)"></i><span><b>Easy:</b> bottom centre. Primary CTA, tab bar.</span></div>
+            <div><i style="background:var(--warn)"></i><span><b>Stretch:</b> middle and far corners. Content, secondary actions.</span></div>
+            <div><i style="background:var(--bad)"></i><span><b>Grip change:</b> top. Rare actions, settings, back.</span></div>
+            <p class="mono muted">Desktop exception: the cursor reaches everywhere, so convention wins (Lily's "New meeting" sits top-right).</p>
+          </div>
+        </div>
+      </figure>
+    </div>
+    <div class="spread flip">
+      <figure class="fig">
+        <div class="label">Minimum target sizes, drawn to scale (1 CSS px ≈ 1 pt ≈ 1 dp)</div>
+        <div class="targets">
+          <div class="tg"><div style="width:24px;height:24px"><span style="width:8px;height:8px"></span></div>WCAG 2.2 AA<br>24 × 24 px</div>
+          <div class="tg"><div style="width:44px;height:44px"><span></span></div>Apple HIG<br>44 × 44 pt</div>
+          <div class="tg"><div style="width:44px;height:44px"><span></span></div>WCAG AAA<br>44 × 44 px</div>
+          <div class="tg"><div style="width:48px;height:48px"><span></span></div>Material<br>48 × 48 dp</div>
+        </div>
+        <figcaption class="fig-cap">The <b>dashed box</b> is the hit area; the dot is the visible icon. The tap area can be bigger than what you see. Smaller targets need about <b>24px</b> of clear space from neighbouring targets.</figcaption>
+      </figure>
+      <div class="notes">
+        <h3>Target sizes <span class="src canon">Canon</span></h3>
+        <p>Aim for 44–48 for anything tappable. That satisfies Apple, Material and WCAG AAA at once. WCAG 2.2's AA floor of 24×24 CSS px is the legal minimum, not the goal.</p>
+        <p class="cite">Sources: <a href="https://www.w3.org/WAI/standards-guidelines/wcag/new-in-22/" target="_blank" rel="noopener">W3C, What's new in WCAG 2.2</a> · <a href="https://frontendchecklist.io/rules/accessibility/touch-targets" target="_blank" rel="noopener">Front-End Checklist, touch targets</a></p>
+        <h3>Mobile isn't a shrunken website <span class="src feed">Feed</span></h3>
+        <ul>
+          <li>Start at 1:1 parity with web, then add what only a phone can do (Ellie got a <b>voice button</b>).</li>
+          <li>Widgets fight the real competitor, which is being forgotten: "present without being too pushy".</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="ch" id="c8">
+  <div class="ch-head"><div class="ch-num">08</div><div><h2>States, feedback, loading</h2><p class="rule">Every element has more than one state, and every wait needs the right signal.</p></div></div>
+  <div class="ch-body">
+    <div class="notes">
+      <h3>One button, seven states <span class="src canon">Canon</span></h3>
+      <p>Designers who draw only the default state leave developers to invent the rest. Draw all of them as component variants.</p>
+      <div class="states">
+        <div class="st"><span class="label">Default</span><span class="sbtn">Save menu</span></div>
+        <div class="st"><span class="label">Hover</span><span class="sbtn" style="background:#C22F34">Save menu</span></div>
+        <div class="st"><span class="label">Pressed</span><span class="sbtn" style="background:#A9262B;transform:scale(.97)">Save menu</span></div>
+        <div class="st"><span class="label">Focus</span><span class="sbtn" style="outline:3px solid var(--select);outline-offset:2px">Save menu</span></div>
+        <div class="st"><span class="label">Disabled</span><span class="sbtn" style="background:#E8B9BB;color:#fff">Save menu</span></div>
+        <div class="st"><span class="label">Loading</span><span class="sbtn"><span class="spin"></span>Saving…</span></div>
+        <div class="st"><span class="label">Success</span><span class="sbtn" style="background:#13A36B">✓ Saved</span></div>
+      </div>
+      <p class="muted" style="font-size:14px">This is heuristic #1, visibility of system status, applied to the smallest thing on screen. The focus ring is required for keyboard users (WCAG).</p>
+    </div>
+    <div class="spread">
+      <div class="notes">
+        <h3>The three response-time limits <span class="src canon">Canon</span></h3>
+        <div class="timeline">
+          <div style="background:rgba(19,163,107,.15)"><b>0.1 s</b>Feels instant. No indicator needed.</div>
+          <div style="background:rgba(233,161,0,.15)"><b>1 s</b>Noticeable, but thought stays unbroken.</div>
+          <div style="background:rgba(224,72,59,.15)"><b>10 s</b>Attention is lost. Show progress and a way to cancel.</div>
+        </div>
+        <p>The Doherty threshold puts the productive sweet spot at under <b>400 ms</b>, where neither the person nor the system waits on the other.</p>
+        <p class="cite">Sources: <a href="https://www.nngroup.com/articles/response-times-3-important-limits/" target="_blank" rel="noopener">NN/g, Response Times: The 3 Important Limits</a> · <a href="https://lawsofux.com/" target="_blank" rel="noopener">Laws of UX</a></p>
+      </div>
+      <figure class="fig">
+        <div class="label">Which loading indicator? Pick the expected wait</div>
+        <div class="ctrl"><div class="seg" role="group" aria-label="Wait"><button data-w="0" aria-pressed="false">&lt; 1 s</button><button data-w="1" aria-pressed="true">2–10 s, full page</button><button data-w="2" aria-pressed="false">2–10 s, one module</button><button data-w="3" aria-pressed="false">&gt; 10 s or upload</button></div></div>
+        <div class="load" id="loadOut"></div>
+        <p class="cite">Source: <a href="https://www.nngroup.com/articles/skeleton-screens/" target="_blank" rel="noopener">NN/g, Skeleton Screens 101</a></p>
+      </figure>
+    </div>
+    <div class="spread flip">
+      <figure class="fig">
+        <div class="empty">
+          <svg width="56" height="56" viewBox="0 0 56 56" aria-hidden="true"><rect x="8" y="12" width="40" height="34" rx="6" fill="none" stroke="var(--ink-2)" stroke-width="2"/><path d="M8 22h40" stroke="var(--ink-2)" stroke-width="2"/><circle cx="28" cy="34" r="5" fill="var(--redline)"/></svg>
+          <b style="font-family:var(--display);font-size:18px">No dinners planned yet</b>
+          <p style="font-size:14px;color:var(--ink-2)">Save recipes you like, and Mealmate builds your week from them.</p>
+          <span class="sbtn">Browse recipes</span>
+          <a href="#c8" style="font-size:13px">or try a sample week</a>
+        </div>
+      </figure>
+      <div class="notes">
+        <h3>Empty states do three jobs <span class="src canon">Canon</span></h3>
+        <ol>
+          <li><b>Say what's happening.</b> Is it empty, loading, or failed? Never show "No items" while data is still loading.</li>
+          <li><b>Teach.</b> Explain what fills this space and how.</li>
+          <li><b>Offer a path.</b> Give a direct button to the first task, plus a low-risk option such as sample data.</li>
+        </ol>
+        <p class="cite">Source: <a href="https://www.nngroup.com/articles/empty-state-interface-design/" target="_blank" rel="noopener">NN/g, Designing Empty States in Complex Applications</a></p>
+      </div>
+    </div>
+    <div class="try"><span class="label">Try it</span><p>Pick one screen in your app and list every state it can be in: first use, loading, partial, full, error, offline. Design the three you've never drawn.</p></div>
+  </div>
+</section>
+
+<section class="ch" id="c9">
+  <div class="ch-head"><div class="ch-num">09</div><div><h2>Forms &amp; errors</h2><p class="rule">Keep labels visible, write specific errors, and never throw away what someone typed.</p></div></div>
+  <div class="ch-body">
+    <div class="spread">
+      <div class="notes">
+        <h3>Placeholders are not labels <span class="src canon">Canon</span></h3>
+        <p>NN/g lists the costs of using placeholder text as a label:</p>
+        <ul>
+          <li>The hint vanishes when you type, so people forget what the field needs.</li>
+          <li>Users can't check their entries before submitting.</li>
+          <li>Light-grey text usually fails contrast, and some screen readers skip it.</li>
+          <li>It can look like a filled-in value, so empty fields get missed.</li>
+        </ul>
+        <p><b>Use a visible label above the field.</b> Put hints and format examples below the label, outside the field. Floating labels are a compromise, not a fix.</p>
+        <p class="cite">Source: <a href="https://www.nngroup.com/articles/form-design-placeholders/" target="_blank" rel="noopener">NN/g, Placeholders in Form Fields Are Harmful</a></p>
+      </div>
+      <figure class="fig">
+        <div class="bad-good" style="grid-template-columns:1fr;gap:var(--s4)">
+          <div style="display:grid;gap:8px"><span class="chip b" style="justify-self:start">Placeholder as label</span><div class="bad-input">Phone number</div><div class="bad-input">Enrolment number</div></div>
+          <div style="display:grid;gap:8px"><span class="chip g" style="justify-self:start">Label + persistent hint</span>
+            <div class="field"><label for="dph">Phone number</label><span class="hint">10 digits, no country code</span><input id="dph" inputmode="numeric" autocomplete="tel-national"></div></div>
+        </div>
+      </figure>
+    </div>
+    <div class="spread flip">
+      <figure class="fig">
+        <div class="label">Live: validation done right</div>
+        <form class="fbox" id="fx" novalidate>
+          <div class="field" id="fEmailW"><label for="fEmail">College email</label><span class="hint">Ends in @marwadiuniversity.ac.in</span><input id="fEmail" type="email" autocomplete="email"><span class="msg" id="fEmailMsg" hidden></span></div>
+          <div class="field" id="fPassW"><label for="fPass">Password</label><span class="hint">At least 8 characters, including a number</span><input id="fPass" type="password" autocomplete="new-password"><span class="msg" id="fPassMsg" hidden></span></div>
+          <button class="sbtn" type="submit" style="justify-self:start;cursor:pointer">Create account</button>
+          <span id="fOk" class="ok" aria-live="polite"></span>
+        </form>
+        <figcaption class="fig-cap">Errors appear <b>on blur</b> (not while you're still typing), sit next to their field, say how to fix it, and keep your input.</figcaption>
+      </figure>
+      <div class="notes">
+        <h3>Writing error messages <span class="src canon">Canon</span></h3>
+        <div class="msgs">
+          <div class="msg-ex"><span class="chip b">✗</span><span>An error occurred. (Code 400)</span></div>
+          <div class="msg-ex"><span class="chip b">✗</span><span>Invalid input!</span></div>
+          <div class="msg-ex"><span class="chip g">✓</span><span>That email is missing an "@". Try name@example.com.</span></div>
+        </div>
+        <ul>
+          <li><b>Visible:</b> next to the field, using colour <em>and</em> an icon or text, with severity matching the problem.</li>
+          <li><b>Clear:</b> plain language, specific, with the fix included, and never blaming the user.</li>
+          <li><b>Efficient:</b> keep the input, suggest corrections, and prevent the error in the first place.</li>
+        </ul>
+        <p class="cite">Source: <a href="https://www.nngroup.com/articles/error-message-guidelines/" target="_blank" rel="noopener">NN/g, Error-Message Guidelines</a></p>
+      </div>
+    </div>
+    <div class="notes">
+      <h3>More form rules</h3>
+      <ul>
+        <li><b>Chunk long forms</b> into logical groups (personal, address, payment). 3 × 4 fields feels lighter than 12 fields in one block (NN/g).</li>
+        <li><b>Don't ask twice:</b> WCAG 2.2's "Redundant Entry" says data a user already entered should be auto-filled or selectable.</li>
+        <li>Use the right keyboard (<code>inputmode</code>) and <code>autocomplete</code> on every field.</li>
+        <li>Make the primary action describe the result: "Create account", not "Submit".</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="ch" id="c10">
+  <div class="ch-head"><div class="ch-num">10</div><div><h2>Motion</h2><p class="rule">Motion explains change. Keep it fast, eased and purposeful, and make it optional.</p></div></div>
+  <div class="ch-body">
+    <div class="spread">
+      <div class="notes">
+        <h3>How long? <span class="src canon">Canon</span></h3>
+        <table class="t"><thead><tr><th>Context</th><th>Duration</th></tr></thead><tbody>
+          <tr><td>Mobile, typical transition</td><td class="n">~300 ms</td></tr>
+          <tr><td>Element entering screen</td><td class="n">225 ms</td></tr>
+          <tr><td>Element leaving screen</td><td class="n">195 ms</td></tr>
+          <tr><td>Large full-screen change</td><td class="n">up to 375 ms</td></tr>
+          <tr><td>Desktop</td><td class="n">150–200 ms</td></tr>
+          <tr><td>Feels slow</td><td class="n">&gt; 400 ms</td></tr>
+        </tbody></table>
+        <p class="cite">Source: <a href="https://m1.material.io/motion/duration-easing.html" target="_blank" rel="noopener">Material Design, Duration &amp; easing</a></p>
+      </div>
+      <figure class="fig">
+        <div class="ctrl"><button class="sbtn" id="playM" style="cursor:pointer">▶ Play all</button><span class="mono muted">300 ms each</span></div>
+        <div class="curves" id="curves"></div>
+        <figcaption class="fig-cap"><b>Linear</b> feels mechanical. <b>Decelerate</b> is for things arriving and <b>accelerate</b> for things leaving.</figcaption>
+      </figure>
+    </div>
+    <div class="spread flip">
+      <figure class="fig">
+        <div class="label">Where motion earns its place <span class="src feed">Feed</span></div>
+        <ul style="margin:0;padding-left:20px;display:grid;gap:6px">
+          <li><b>Feedback:</b> a button presses, a toggle slides, a heart pops.</li>
+          <li><b>Orientation:</b> a sheet slides up from where you tapped, so you know where it came from.</li>
+          <li><b>Delight, sparingly:</b> Cecilia's wedding app doodles dance on scroll and the envelope "bursts into place".</li>
+        </ul>
+        <div class="quote">"That transition from static to interactive is the moment a design stops being a mock-up and starts feeling like a real product."<cite>Cecilia Kim</cite></div>
+      </figure>
+      <div class="notes">
+        <h3>Rules</h3>
+        <ul>
+          <li>Animate one thing at a time when you can, and stagger groups by 20–50 ms.</li>
+          <li>Never block input while a decorative animation plays.</li>
+          <li>Respect <b>reduce motion</b>: swap movement for a fade, or nothing. Every figure in this book does this.</li>
+          <li>WCAG 2.2: anything done by dragging must also work with a single tap or click.</li>
+          <li>For inspiration, study <b>60fps</b> and <b>Ripplix</b> (micro-interactions).</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="ch" id="c11">
+  <div class="ch-head"><div class="ch-num">11</div><div><h2>Accessibility</h2><p class="rule">Design for the widest range of people from the first wireframe. It improves things for everyone.</p></div></div>
+  <div class="ch-body">
+    <div class="notes">
+      <h3>What WCAG 2.2 added (published 5 Oct 2023) <span class="src canon">Canon</span></h3>
+      <div class="scroll"><table class="t"><thead><tr><th>#</th><th>Criterion</th><th>Level</th><th>What it means for your design</th></tr></thead><tbody>
+        <tr><td class="n">2.4.11</td><td>Focus Not Obscured (Min)</td><td>AA</td><td>Sticky headers and bottom sheets must not fully cover the focused element.</td></tr>
+        <tr><td class="n">2.4.12</td><td>Focus Not Obscured (Enh.)</td><td>AAA</td><td>No part of the focused element is hidden.</td></tr>
+        <tr><td class="n">2.4.13</td><td>Focus Appearance</td><td>AAA</td><td>Focus ring at least 2px thick with 3:1 contrast against the unfocused state.</td></tr>
+        <tr><td class="n">2.5.7</td><td>Dragging Movements</td><td>AA</td><td>Give every drag (reorder, slider) a tap or click alternative.</td></tr>
+        <tr><td class="n">2.5.8</td><td>Target Size (Min)</td><td>AA</td><td>Targets at least 24×24 CSS px, or enough spacing around them.</td></tr>
+        <tr><td class="n">3.2.6</td><td>Consistent Help</td><td>A</td><td>Help and contact links stay in the same place on every page.</td></tr>
+        <tr><td class="n">3.3.7</td><td>Redundant Entry</td><td>A</td><td>Don't make people re-type what they already entered.</td></tr>
+        <tr><td class="n">3.3.8</td><td>Accessible Authentication (Min)</td><td>AA</td><td>No memory or puzzle tests to log in. Allow paste, password managers and passkeys.</td></tr>
+        <tr><td class="n">3.3.9</td><td>Accessible Authentication (Enh.)</td><td>AAA</td><td>Same, with fewer exceptions.</td></tr>
+      </tbody></table></div>
+      <p class="cite">Source: <a href="https://www.w3.org/WAI/standards-guidelines/wcag/new-in-22/" target="_blank" rel="noopener">W3C WAI, What's New in WCAG 2.2</a>. 4.1.1 Parsing was removed as obsolete.</p>
+    </div>
+    <div class="notes">
+      <h3>The designer's accessibility pass</h3>
+      <div class="cards">
+        <div class="hcard" style="cursor:default"><span class="n">CONTRAST</span><b>4.5 : 1 / 3 : 1</b><span class="more">Body text / large text and UI parts. Test both themes.</span></div>
+        <div class="hcard" style="cursor:default"><span class="n">COLOUR</span><b>Never alone</b><span class="more">Errors get an icon and text, and charts get labels or patterns.</span></div>
+        <div class="hcard" style="cursor:default"><span class="n">TARGETS</span><b>44–48 tap area</b><span class="more">24 px is the AA floor.</span></div>
+        <div class="hcard" style="cursor:default"><span class="n">TEXT SIZE</span><b>Scales up</b><span class="more">Support iOS Dynamic Type and Android font scaling, and test at 200%.</span></div>
+        <div class="hcard" style="cursor:default"><span class="n">FOCUS</span><b>Visible ring</b><span class="more">Design it, don't delete it. Keep logical tab order.</span></div>
+        <div class="hcard" style="cursor:default"><span class="n">LABELS</span><b>Name everything</b><span class="more">Icon buttons need text labels for screen readers, and images need alt text.</span></div>
+        <div class="hcard" style="cursor:default"><span class="n">MOTION</span><b>Reduce motion</b><span class="more">Offer a calm version, with no autoplay parallax.</span></div>
+        <div class="hcard" style="cursor:default"><span class="n">LOGIN</span><b>No puzzles</b><span class="more">Allow paste and autofill, and offer passkeys or email links.</span></div>
+      </div>
+      <div class="try"><span class="label">Try it</span><p>Turn on VoiceOver or TalkBack and complete one task in your own app with your eyes closed. Write down every place you got lost.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PART IV ================= -->
+<div class="part"><div class="label">Part IV</div><h2>Making &amp; shipping</h2></div>
+
+<section class="ch" id="c12">
+  <div class="ch-head"><div class="ch-num">12</div><div><h2>Process &amp; testing</h2><p class="rule">Separate structure from surface, and test with five people before you polish.</p></div></div>
+  <div class="ch-body">
+    <figure class="fig">
+      <div class="scroll">
+        <div class="flow">
+          <div class="lane" style="background:var(--tint);color:var(--select)">UX: grey boxes, no colour</div>
+          <div class="step"><span class="n">1</span><b>Research patterns</b>Search Mobbin, copy everything, judge later.</div>
+          <div class="step"><span class="n">2</span><b>Paper sketches</b>5–6 messy layouts. Don't get attached.</div>
+          <div class="step"><span class="n">3</span><b>Low-fi wireframe</b>Is it intuitive? What happens on tap?</div>
+          <div class="step"><span class="n">4</span><b>Test the flow</b>5 people. Restarting is cheap now.</div>
+          <div class="lane" style="background:#FDE3EE;color:#A01650">UI: the visual layer</div>
+          <div class="step"><span class="n">5</span><b>Two mood boards</b>One for vibe, one for UI inspiration.</div>
+          <div class="step"><span class="n">6</span><b>Type + colour</b>~20 pairs, 3–4 palettes, all contrast-checked.</div>
+          <div class="step"><span class="n">7</span><b>Fresh eyes</b>"After hours, everything looks the same."</div>
+          <div class="step"><span class="n">8</span><b>Step away</b>Breaks are strategic. Then refine.</div>
+        </div>
+      </div>
+      <figcaption class="fig-cap"><span class="src feed">Feed</span> Cecilia's pipeline. Stuck on a visual direction? Spend <b>15 minutes</b> on Pinterest saving everything, lay it out together in Figma, and the pattern shows itself.</figcaption>
+    </figure>
+
+    <div class="notes">
+      <h3>Case study: Mealmate, one screen with a 1-hour timebox <span class="src feed">Feed</span></h3>
+      <p>Cecilia picked the weekly menu: the simplest screen to redesign, with the most impact. Scroll through the four states.</p>
+    </div>
+    <div class="iters" id="iters"></div>
+
+    <div class="spread">
+      <div class="notes">
+        <h3>Why five users? <span class="src canon">Canon</span></h3>
+        <p>For <b>qualitative</b> testing (finding problems), the Nielsen and Landauer model says <b>5 participants find about 85%</b> of usability issues. After that, each new person mostly repeats what you've seen. Fix the problems and test again with another five.</p>
+        <p>For <b>quantitative</b> studies (measuring time, success rate or comparing designs), you need <b>30+</b> participants, and 40 or more for narrow confidence intervals.</p>
+        <p class="cite">Source: <a href="https://www.nngroup.com/articles/5-test-users-qual-quant/" target="_blank" rel="noopener">NN/g, How Many Participants for a UX Interview / Test?</a></p>
+      </div>
+      <figure class="fig">
+        <div class="label">Share of problems found vs. number of users (1 − (1 − 0.31)ⁿ)</div>
+        <div class="curve5" id="curve5" aria-label="Problems found rises steeply then flattens after five users"></div>
+        <div class="mono muted" style="display:flex;justify-content:space-between"><span>1 user</span><span>8 users</span></div>
+        <figcaption class="fig-cap">Diminishing returns: run <b>three rounds of 5</b>, not one round of 15.</figcaption>
+      </figure>
+    </div>
+    <div class="notes">
+      <h3>Running a 30-minute test</h3>
+      <ol>
+        <li>Write 3–5 <b>realistic tasks</b> that don't give the answer away ("Plan dinners for this week", not "Tap Generate").</li>
+        <li>Ask the person to <b>think aloud</b>. Stay quiet and don't help. Note where they hesitate.</li>
+        <li>Log each issue with a severity: blocker, major or minor.</li>
+        <li>Fix the blockers, then test again with the next five people.</li>
+      </ol>
+      <div class="try"><span class="label">Try it</span><p>Test your attendance app with 5 classmates this week. One task each, 10 minutes per person. Count how many hit the same problem.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="ch" id="c13">
+  <div class="ch-head"><div class="ch-num">13</div><div><h2>Figma &amp; design systems</h2><p class="rule">Frames, auto layout, components, styles and tokens. Change once, update everywhere.</p></div></div>
+  <div class="ch-body">
+    <div class="spread">
+      <div class="notes">
+        <h3>Think in stacks <span class="src feed">Feed</span></h3>
+        <p>Cecilia brings this from iOS: Figma's auto layout works like SwiftUI's horizontal and vertical stacks. If you build screens in Flutter, it's the same idea as Row and Column. Break every screen into these and it adapts to every phone size.</p>
+        <ul>
+          <li><b>Frames, not groups:</b> frames carry layout rules; groups don't.</li>
+          <li><b>Auto layout everywhere:</b> no more broken layouts.</li>
+          <li><b>Layout grids:</b> look up the web and mobile standards.</li>
+        </ul>
+      </div>
+      <figure class="fig">
+        <div class="stack v" data-k="VStack / Column · gap 16">
+          <div class="stack" data-k="HStack / Row · gap 8"><div class="box">Avatar</div><div class="box" style="flex:1">Good evening, Christian</div><div class="box">Search</div></div>
+          <div class="stack v" data-k="VStack · gap 8">
+            <div class="stack" data-k="HStack"><div class="box">Img</div><div class="stack v" data-k="VStack" style="flex:1"><div class="box">Title</div><div class="box">Author</div></div></div>
+            <div class="stack" data-k="HStack"><div class="box">Img</div><div class="stack v" data-k="VStack" style="flex:1"><div class="box">Title</div><div class="box">Author</div></div></div>
+          </div>
+        </div>
+        <figcaption class="fig-cap">A reading-app home screen as nested stacks. <b>Blue dashed</b> = auto layout frames.</figcaption>
+      </figure>
+    </div>
+    <div class="spread flip">
+      <figure class="fig">
+        <div class="ctrl"><span class="label">Brand colour style</span><div class="seg" role="group" aria-label="Brand colour"><button data-b="#D9393E" aria-pressed="true">Red</button><button data-b="#16855A" aria-pressed="false">Green</button><button data-b="#2563C9" aria-pressed="false">Blue</button></div></div>
+        <div class="comp">
+          <div class="master"><span class="mono" style="color:#9747FF">◆ Main component</span><div class="pill bp">Mon · Pasta</div></div>
+          <div class="inst"><span class="mono" style="color:#9747FF">◇ Instance</span><div class="pill bp">Tue · Curry</div></div>
+          <div class="inst"><span class="mono" style="color:#9747FF">◇ Instance</span><div class="pill bp">Wed · Soup</div></div>
+          <div class="inst"><span class="mono" style="color:#9747FF">◇ Instance ×47</span><div class="pill bp">…</div></div>
+        </div>
+        <figcaption class="fig-cap">"Imagine doing this manually for <b>50 whole rows</b>." Change the colour style once, and every instance updates.</figcaption>
+      </figure>
+      <div class="notes">
+        <h3>A file developers love <span class="src feed">Feed</span></h3>
+        <ul>
+          <li>Thumbnail, plus a start page linking the PRD and research</li>
+          <li>Problem statement and competitor analysis</li>
+          <li>Design intentions and "How might we" statements</li>
+          <li>Iterations grouped by milestone</li>
+          <li>Finals: before/after, notes on changes, marked for Dev Mode</li>
+        </ul>
+        <p class="mono muted">via UI Gradient (@ux.edward)</p>
+      </div>
+    </div>
+    <div class="notes">
+      <h3>Tokens in three tiers <span class="src canon">Canon</span></h3>
+      <p>A token is a named design decision. Name tokens by <em>role</em>, not value, and a rebrand becomes a one-line change. This is what UI Gradient's <code>design.md</code> files describe for AI agents.</p>
+      <div class="tiers">
+        <div class="tier"><span class="label">1 · Primitive</span><b>The raw scale</b><code>red-600 = #D9393E</code><code>space-4 = 16px</code><span class="muted" style="font-size:13px">Every available value. Never used directly in components.</span></div>
+        <div class="tier"><span class="label">2 · Semantic</span><b>The role</b><code>color-action-primary-bg → red-600</code><code>space-section → space-6</code><span class="muted" style="font-size:13px">What a value is <em>for</em>. Light and dark themes swap values at this layer.</span></div>
+        <div class="tier"><span class="label">3 · Component</span><b>The exception</b><code>btn-primary-hover-bg → red-700</code><span class="muted" style="font-size:13px">Only where a component needs its own decision.</span></div>
+      </div>
+      <p class="cite">Naming pattern (namespace · object · base · modifier) from <a href="https://designsystem.tech.gov.sg/foundations/token-naming" target="_blank" rel="noopener">Singapore Government Design System, Token naming</a>. In Figma these are <b>Variables</b>, with modes for light and dark.</p>
+    </div>
+  </div>
+</section>
+
+<section class="ch" id="c14">
+  <div class="ch-head"><div class="ch-num">14</div><div><h2>Personality &amp; building with AI</h2><p class="rule">Handmade detail makes it memorable. Taste is what steers the AI.</p></div></div>
+  <div class="ch-body">
+    <div class="spread">
+      <div class="notes">
+        <h3>Spend personality where people linger <span class="src feed">Feed</span></h3>
+        <ul>
+          <li><b>Onboarding:</b> the part everyone taps through. Amy's illustrations loop through 3 frames.</li>
+          <li><b>Rewards:</b> hand-drawn cat-meme streak badges instead of generic trophies.</li>
+          <li><b>Mascots:</b> Lily's ghost, Ellie's hamster.</li>
+          <li><b>Widgets:</b> a small drawing that "earns that space" on the home screen.</li>
+        </ul>
+        <p><b>Procreate animation in 4 moves:</b> collect references → rough trace, then a clean pass → add brand colour and shading → 3 layers + Animation Assist.</p>
+        <p style="font-size:13px" class="muted">Aesthetic-usability effect <span class="src canon">Canon</span>: people perceive attractive designs as easier to use, and are more forgiving of small flaws in them.</p>
+      </div>
+      <figure class="fig">
+        <div class="widgets">
+          <div class="w plain"><span>Calories</span><b>1,240</b><span>of 1,800</span></div>
+          <div class="w fun"><span>Amy · today</span><svg viewBox="0 0 80 50" width="80" height="50" aria-label="Hand-drawn style cat doodle"><path d="M10 45 Q12 22 26 20 L22 8 L32 17 Q40 15 48 17 L58 8 L54 20 Q68 22 70 45 Z" fill="#B7A2F2" stroke="#3B2774" stroke-width="2" stroke-linejoin="round"/><circle cx="32" cy="31" r="2.4" fill="#3B2774"/><circle cx="48" cy="31" r="2.4" fill="#3B2774"/><path d="M37 37 Q40 40 43 37" fill="none" stroke="#3B2774" stroke-width="2" stroke-linecap="round"/></svg><span><b style="font-size:20px">560</b> kcal left</span></div>
+        </div>
+        <div class="landing">
+          <div class="label">A landing page answers three questions first</div>
+          <div class="qa"><div><b>What does it do?</b>One line in the hero.</div><div><b>Is it for me?</b>Name the audience and the problem.</div><div><b>Would I like it?</b>Show the product's feel.</div></div>
+        </div>
+      </figure>
+    </div>
+    <div class="spread flip">
+      <div class="lessons">
+        <div class="label">Jhanvi's 5 vibe-coding lessons <span class="src feed">Feed</span></div>
+        <div class="lesson"><span>1</span><div><b>Easy features are a trap</b>Decide what you're building before you open the chat.</div></div>
+        <div class="lesson"><span>2</span><div><b>Don't dump a whole PRD</b>Build in phases, one feature at a time.</div></div>
+        <div class="lesson"><span>3</span><div><b>Revert without fear</b>Can't prompt your way out? Roll back and start fresh.</div></div>
+        <div class="lesson"><span>4</span><div><b>"Explain it like I'm 5"</b>Understand what it built before moving on.</div></div>
+        <div class="lesson"><span>5</span><div><b>Touch grass</b>It's addictive. Step away and come back fresh.</div></div>
+      </div>
+      <div class="notes">
+        <h3>Prompts with a finish line <span class="src feed">Feed</span></h3>
+        <div class="prompt x">Make it look clean.</div>
+        <div class="prompt ok">Make it look clean. The goal is met when no info shows up twice and all the spacing is a multiple of 4.</div>
+        <p style="font-size:14px">Cecilia's loop: Figma → Claude Code → see changes live on your phone → give feedback "like to a junior designer". About 2 days to a working prototype. Parallel agents built a feature she'd budgeted weeks for in 2 hours.</p>
+        <div class="label">Ship-safe checks (Jhanvi)</div>
+        <ul><li>HTTPS everywhere</li><li>No API keys in client code</li><li>Validate and sanitise every input</li><li>CSRF protection on forms</li></ul>
+      </div>
+    </div>
+    <pre class="code" aria-label="Example design.md"><span class="c"># design.md: lives in the repo, read by coding agents (UI Gradient)</span>
+<span class="k">## Principles</span>
+- Clarity over density · one accent per screen, reserved for the primary action
+<span class="k">## Tokens</span> <span class="c">(roles, not just hex codes)</span>
+- color.action.primary  <span class="v">#D9393E</span>   color.text  <span class="v">#3D4350</span> (never pure black)
+- space  <span class="v">4 · 8 · 16 · 24 · 32</span>   type.body  <span class="v">17/22</span>
+<span class="k">## Components</span>
+- Button radius is always <span class="v">8px</span>, min height <span class="v">44px</span>, 7 states (see ch. 08)
+- Primary CTA floats at the bottom on mobile
+<span class="k">## Done when</span>
+- Every text pair passes 4.5:1 · no spacing value outside the scale</pre>
+  </div>
+</section>
+
+<section class="ch" id="c15">
+  <div class="ch-head"><div class="ch-num">15</div><div><h2>Portfolio &amp; career</h2><p class="rule">"Clients don't hire pretty pictures, they hire thought processes."</p></div></div>
+  <div class="ch-body">
+    <div class="spread">
+      <div class="notes">
+        <h3>Cut, don't add <span class="src feed">Feed</span></h3>
+        <p>Keep only projects where you can walk someone through every decision, iteration and reason. Hiring managers ask one thing: does this person think well?</p>
+        <div class="quote">"If your portfolio feels like it's missing something, try removing things instead of adding more."<cite>Cecilia Kim</cite></div>
+        <ul>
+          <li>Cecilia's first client found her when she had <b>30 followers</b>, through one post explaining a palette.</li>
+          <li>Post your process 2–3× a week, like a design journal.</li>
+          <li>Passion projects matter more in the AI era (Jhanvi).</li>
+          <li>Tool: no-code you know for speed, code for something unique, or a template you customise for both.</li>
+        </ul>
+      </div>
+      <figure class="fig">
+        <div class="label">Jhanvi's FigJam sort, after studying 50+ portfolios</div>
+        <div class="board">
+          <div class="col"><span class="chip g">Include</span><div class="sticky" style="background:#C9F2D9">Hero</div><div class="sticky" style="background:#C9F2D9">Case studies</div><div class="sticky" style="background:#C9F2D9">About</div></div>
+          <div class="col"><span class="chip w">Maybe</span><div class="sticky" style="background:#FFF1B8">Blog</div><div class="sticky" style="background:#FFF1B8">Side projects</div><div class="sticky" style="background:#FFF1B8">Resume</div></div>
+          <div class="col"><span class="chip b">Cut</span><div class="sticky" style="background:#FFD6D1">Testimonials</div><div class="sticky" style="background:#FFD6D1">Contact form</div></div>
+        </div>
+        <figcaption class="fig-cap">Sources: cofolios.com · wallofportfolios.in · bestfolios.com · seniors you know.</figcaption>
+      </figure>
+    </div>
+    <div class="fig">
+      <div class="label">Case-study skeleton (from Jhanvi's notes)</div>
+      <div class="skeleton"><span>Context</span><i>→</i><span>Team + your role</span><i>→</i><span>What you did</span><i>→</i><span>Research + findings</span><i>→</i><span>Pain points</span><i>→</i><span>Personas</span><i>→</i><span>Jobs to be done</span><i>→</i><span>Insight</span><i>→</i><span>Goal</span><i>→</i><span>Iterations + outcome</span></div>
+    </div>
+    <div class="notes">
+      <h3>A 6-week practice plan</h3>
+      <div class="scroll"><table class="t"><thead><tr><th>Week</th><th>Focus</th><th>Exercise</th><th>Chapters</th></tr></thead><tbody>
+        <tr><td class="n">1</td><td>Foundations</td><td>Read <i>Don't Make Me Think</i>. Do a heuristic review of one app you use daily.</td><td class="n">01–03</td></tr>
+        <tr><td class="n">2</td><td>Visual craft</td><td>Restyle one screen of Task Flow: spacing scale, serif + sans pair, 5-token palette, contrast-checked in both themes.</td><td class="n">04–06</td></tr>
+        <tr><td class="n">3</td><td>Interaction</td><td>Draw every state of that screen, plus its empty state, a form with inline errors, and 44pt targets.</td><td class="n">07–11</td></tr>
+        <tr><td class="n">4</td><td>Process</td><td>Run a Mealmate-style 1-hour redesign of your attendance app's main screen. Test it with 5 classmates.</td><td class="n">12</td></tr>
+        <tr><td class="n">5</td><td>System + build</td><td>Turn it into components and variables, write a <code>design.md</code>, and vibe-code it in Flutter.</td><td class="n">13–14</td></tr>
+        <tr><td class="n">6</td><td>Show</td><td>Write it up with the case-study skeleton and post the before/after <em>with your reasoning</em>.</td><td class="n">15</td></tr>
+      </tbody></table></div>
+    </div>
+  </div>
+</section>
+
+<section class="ch" id="check">
+  <div class="ch-head"><div class="ch-num">✓</div><div><h2>Pre-share checklist</h2><p class="rule">Run this before anyone sees a screen. Your ticks are saved in this browser.</p></div></div>
+  <div class="ch-body">
+    <div class="progress" aria-hidden="true"><div id="prog"></div></div>
+    <div class="check" id="checkList"></div>
+  </div>
+</section>
+
+<section class="ch" id="toolkit">
+  <div class="ch-head"><div class="ch-num">⌘</div><div><h2>Toolkit</h2><p class="rule">"The right tool for the right situation." Don't force one tool to do everything.</p></div></div>
+  <div class="ch-body"><div class="tools" id="tools"></div></div>
+</section>
+
+<section class="ch" id="sources">
+  <div class="ch-head"><div class="ch-num">§</div><div><h2>Sources</h2><p class="rule">Feed material comes from reel transcripts, on-screen captions and carousels. Canon material comes from the pages below, opened 29 Oct 2026.</p></div></div>
+  <div class="ch-body">
+    <div class="sources">
+      <a href="https://www.instagram.com/ceciliakimdesign/" target="_blank" rel="noopener">@ceciliakimdesign: 52 posts and reels</a>
+      <a href="https://www.instagram.com/ux.wheee/" target="_blank" rel="noopener">@ux.wheee: vibe coding, portfolio series, security</a>
+      <a href="https://www.instagram.com/ui_gradient/" target="_blank" rel="noopener">@ui_gradient: design.md, Figma hygiene, resources</a>
+      <a href="https://www.nngroup.com/articles/ten-usability-heuristics/" target="_blank" rel="noopener">NN/g: 10 Usability Heuristics</a>
+      <a href="https://www.nngroup.com/articles/gestalt-proximity/" target="_blank" rel="noopener">NN/g: Proximity Principle</a>
+      <a href="https://www.nngroup.com/articles/f-shaped-pattern-reading-web-content/" target="_blank" rel="noopener">NN/g: F-Shaped Reading Pattern</a>
+      <a href="https://www.nngroup.com/articles/response-times-3-important-limits/" target="_blank" rel="noopener">NN/g: Response Times, 3 Limits</a>
+      <a href="https://www.nngroup.com/articles/skeleton-screens/" target="_blank" rel="noopener">NN/g: Skeleton Screens 101</a>
+      <a href="https://www.nngroup.com/articles/empty-state-interface-design/" target="_blank" rel="noopener">NN/g: Designing Empty States</a>
+      <a href="https://www.nngroup.com/articles/form-design-placeholders/" target="_blank" rel="noopener">NN/g: Placeholders Are Harmful</a>
+      <a href="https://www.nngroup.com/articles/error-message-guidelines/" target="_blank" rel="noopener">NN/g: Error-Message Guidelines</a>
+      <a href="https://www.nngroup.com/articles/5-test-users-qual-quant/" target="_blank" rel="noopener">NN/g: How Many Test Participants</a>
+      <a href="https://lawsofux.com/" target="_blank" rel="noopener">Laws of UX (Jon Yablonski)</a>
+      <a href="https://developer.apple.com/design/human-interface-guidelines/typography" target="_blank" rel="noopener">Apple HIG: Typography</a>
+      <a href="https://www.w3.org/WAI/standards-guidelines/wcag/new-in-22/" target="_blank" rel="noopener">W3C: What's New in WCAG 2.2</a>
+      <a href="https://frontendchecklist.io/rules/accessibility/touch-targets" target="_blank" rel="noopener">Front-End Checklist: Touch targets</a>
+      <a href="https://m1.material.io/motion/duration-easing.html" target="_blank" rel="noopener">Material: Duration &amp; easing</a>
+      <a href="https://codelabs.developers.google.com/codelabs/design-material-darktheme/" target="_blank" rel="noopener">Google: Material dark theme codelab</a>
+      <a href="https://baymard.com/blog/line-length-readability" target="_blank" rel="noopener">Baymard: Optimal line length</a>
+      <a href="https://designsystem.tech.gov.sg/foundations/token-naming" target="_blank" rel="noopener">SGDS: Token naming</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>Compiled 29 Oct 2026. Feed quotes are lightly cleaned up from auto-transcripts. Food images are drawn placeholders.</span>
+</footer>
+</div>
+
+<script>
+(function(){
+const $=s=>document.querySelector(s);
+const reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* books */
+const books=[
+ ["Don't Make Me Think","Steve Krug","#E0483B","Design pages like billboards seen at 60 mph. If the user has to think, you've already lost them. Readable in about 2 hours."],
+ ["Design of Everyday Things","Don Norman","#2563C9","Affordances and signifiers: why you push doors marked \"pull\". Once you see it, you can't unsee it."],
+ ["Elements of User Experience","J. J. Garrett","#4E3E88","Five planes, from strategy to surface: the blueprint for how every decision connects (figure above)."],
+ ["Practical UI","Adham Dannaway","#16855A","Current, no-fluff advice on modern patterns and accessibility standards (2024)."],
+ ["Laws of UX","Jon Yablonski","#C77800","Psychology turned into memorable principles. Chapter 02 draws the ones you'll use most."]];
+const shelf=$('#shelf'),note=$('#bookNote');
+books.forEach((b,i)=>{const el=document.createElement('button');el.className='spine';el.style.background=b[2];el.style.height=(170+(i%3)*18)+'px';el.textContent=b[0];el.setAttribute('aria-pressed',i===0);
+ el.onclick=()=>{shelf.querySelectorAll('.spine').forEach(s=>s.setAttribute('aria-pressed','false'));el.setAttribute('aria-pressed','true');showB(i)};shelf.appendChild(el)});
+function showB(i){const b=books[i];note.innerHTML='<div class="label">'+b[1]+'</div><div style="font:600 18px var(--display);margin:2px 0 4px">'+b[0]+'</div><p style="font-size:14px">'+b[3]+'</p>'}
+showB(0);
+
+/* expandable cards */
+function cards(el,data){data.forEach((d,i)=>{const b=document.createElement('button');b.className='hcard';b.setAttribute('aria-expanded','false');
+ b.innerHTML='<span class="n">'+d[0]+'</span><b>'+d[1]+'</b><span class="more">'+d[2]+'</span><span class="ex" hidden>'+d[3]+'</span>';
+ b.onclick=()=>{const on=b.getAttribute('aria-expanded')!=='true';b.setAttribute('aria-expanded',on);b.querySelector('.ex').hidden=!on};el.appendChild(b)})}
+cards($('#heur'),[
+ ["01","Visibility of system status","Always show what's happening, with timely feedback.","Like a mall map's \"You are here\". In UI: loading states, a 'Saved' toast, a progress bar."],
+ ["02","Match the real world","Use the user's words and real-world order, not system jargon.","Stove knobs laid out like the burners. In UI: 'Notifications', not 'Webhook config'."],
+ ["03","User control & freedom","Give a clearly marked exit: undo, cancel, back.","Like emergency exits. In UI: 'Undo' on the delete toast instead of an 'Are you sure?' dialog."],
+ ["04","Consistency & standards","Same words and actions mean the same thing. Follow platform conventions.","Hotel check-in is always at the front. In UI: Jakob's law. Your app works like the others people use."],
+ ["05","Error prevention","Remove error-prone conditions, or confirm before a risky action.","Guard rails on mountain roads. In UI: disable invalid dates, warn about a missing attachment."],
+ ["06","Recognition over recall","Make options visible; don't make people remember.","Recognising Lisbon is easier than recalling it. In UI: recent searches, visible menus."],
+ ["07","Flexibility & efficiency","Shortcuts for experts that don't burden beginners.","Locals take shortcuts, tourists follow signs. In UI: keyboard shortcuts, swipe actions, favourites."],
+ ["08","Aesthetic & minimalist","Cut what isn't needed; every extra item competes.","An ornate teapot that's hard to pour. In UI: Cecilia's 'remove visual noise' first rule."],
+ ["09","Recover from errors","Plain-language errors that point to the fix.","A 'Wrong way' road sign. In UI: see chapter 09's error-message rules."],
+ ["10","Help & documentation","Best if not needed. If needed, keep it searchable, contextual and concrete.","An airport info kiosk. In UI: inline tips and empty-state guidance."]]);
+cards($('#laws'),[
+ ["JAKOB","Jakob's law","Users spend most of their time on other apps and expect yours to work the same way.","→ Use standard patterns (Mobbin). Innovate where it pays."],
+ ["FITTS","Fitts's law","Time to hit a target depends on its distance and size.","→ Big CTAs in the thumb zone. Put destructive actions far from frequent ones."],
+ ["HICK","Hick's law","Decision time grows with the number and complexity of choices.","→ Fewer options per screen. Highlight a recommended choice."],
+ ["MILLER","Miller's law","Working memory holds about 7 ± 2 items.","→ Chunk phone numbers, OTPs and long forms. Don't count on recall."],
+ ["CHOICE","Choice overload","Too many options overwhelm people.","→ Curate. Use smart defaults and progressive disclosure."],
+ ["DOHERTY","Doherty threshold","Productivity soars when responses come in under 400 ms.","→ Optimistic UI, instant feedback, skeletons for anything slower."],
+ ["AESTHETIC","Aesthetic-usability","Attractive designs are perceived as more usable.","→ Polish buys forgiveness, but it can hide problems in tests."],
+ ["PEAK-END","Peak-end rule","Experiences are judged by their peak and their end.","→ Design the best moment and the final screen (success state, streak badge)."],
+ ["GOAL","Goal-gradient","Motivation rises as the goal gets closer.","→ Progress bars, 'two steps left', and starting at 10% instead of 0%."],
+ ["ZEIGARNIK","Zeigarnik effect","Unfinished tasks stick in memory.","→ Profile-completion meters and resumable drafts."],
+ ["SERIAL","Serial position","People remember first and last items best.","→ Put key navigation items at the ends of a tab bar."],
+ ["VON RESTORFF","Isolation effect","The item that differs is the one remembered.","→ One accent CTA. If everything stands out, nothing does."],
+ ["TESLER","Tesler's law","Every system has complexity that can't be removed. Someone has to handle it.","→ Let the system absorb it (defaults, autofill), not the user."],
+ ["POSTEL","Postel's law","Be liberal in what you accept and conservative in what you send.","→ Accept '98765 43210' and '9876543210', then format it neatly."]]);
+
+/* F pattern */
+function fpat(good){$('#fBad').setAttribute('aria-pressed',!good);$('#fGood').setAttribute('aria-pressed',good);
+ const el=$('#fpat');let h='';
+ if(!good){for(let i=0;i<11;i++)h+='<div class="tl" style="width:'+(96-(i%3)*4)+'%"></div>';
+  h+='<svg class="hm" viewBox="0 0 100 100" preserveAspectRatio="none"><defs><linearGradient id="hg" x1="0" x2="1"><stop offset="0" stop-color="#E3266F" stop-opacity=".5"/><stop offset="1" stop-color="#E3266F" stop-opacity="0"/></linearGradient></defs><rect x="0" y="4" width="95" height="10" fill="url(#hg)"/><rect x="0" y="28" width="60" height="9" fill="url(#hg)"/><rect x="0" y="4" width="16" height="92" fill="#E3266F" opacity=".22"/></svg>';
+  $('#fcap').innerHTML='Heat (<b>magenta</b>) falls on the first lines and the left edge. Everything else gets skipped.'}
+ else{h='<div style="font:700 15px var(--display)">Plan a week in 2 minutes</div><div class="tl" style="width:90%"></div><div class="tl" style="width:70%"></div>'+
+  '<div style="font:700 13px var(--display);margin-top:6px">• <b>Save</b> recipes you like</div><div style="font:700 13px var(--display)">• <b>Tap</b> Generate week</div><div style="font:700 13px var(--display)">• <b>Shop</b> from one list</div>'+
+  '<div style="font:700 15px var(--display);margin-top:6px">Free for students</div><div class="tl" style="width:80%"></div>';
+  $('#fcap').innerHTML='Key point up top, <b>front-loaded headings</b>, bolded keywords, short lists. This is layer-cake friendly.'}
+ el.innerHTML=h}
+$('#fBad').onclick=()=>fpat(false);$('#fGood').onclick=()=>fpat(true);fpat(false);
+
+/* spacing */
+const k=$('#spaceK'),card=$('#demoCard');
+function sp(){const v=+k.value;card.style.setProperty('--k',v);
+ $('#rPad').textContent=Math.round(v*16/4)*4;$('#rGap').textContent=Math.round(v*8/4)*4;
+ $('#spaceOut').textContent=v<.7?'cramped':v<1.1?'comfortable':'airy'}
+k.oninput=sp;sp();
+const sc=$('#scale');[4,8,12,16,24,32,48,64].forEach(n=>{const d=document.createElement('div');d.innerHTML='<span class="mono">'+n+'</span><span style="width:'+(n*3)+'px;max-width:100%"></span>';sc.appendChild(d)});
+function px(good){$('#pxBad').setAttribute('aria-pressed',!good);$('#pxGood').setAttribute('aria-pressed',good);
+ const a=good?4:14,b=good?24:14;let h='';['Full name','Enrolment number','Department'].forEach((l,i)=>{h+='<div class="lb" style="margin-top:'+(i?b:0)+'px">'+l+'</div><div class="in" style="margin-top:'+a+'px"></div>'});
+ $('#pxForm').innerHTML=h;$('#pxCap').innerHTML=good?'Label → field <b>4px</b>, field → next label <b>24px</b>. Pairs read instantly.':'Every gap <b>14px</b>. Which field does "Enrolment number" belong to?'}
+$('#pxBad').onclick=()=>px(false);$('#pxGood').onclick=()=>px(true);px(false);
+
+/* type */
+const pdH=$('#pdH'),pdB=$('#pdB');
+function pair(good){$('#pGood').setAttribute('aria-pressed',good);$('#pBad').setAttribute('aria-pressed',!good);
+ pdH.style.fontFamily=good?"'DM Serif Display',serif":"Inter,sans-serif";pdH.style.fontWeight=good?'400':'500';pdB.style.fontFamily=good?"'DM Sans',sans-serif":"'Source Sans 3',sans-serif"}
+$('#pGood').onclick=()=>pair(true);$('#pBad').onclick=()=>pair(false);pair(true);
+function ladder(el,rows){rows.forEach(r=>{const d=document.createElement('div');d.innerHTML='<span class="mono">'+r[0]+'</span><span style="font:'+r[2]+' '+r[1]+'px/1.3 '+r[3]+'">'+(r[4]||'Weekly menu')+'</span>';el.appendChild(d)})}
+const sf="-apple-system,'SF Pro Text',var(--body)";
+ladder($('#ladderIOS'),[["Large Title · 34/41",34,400,sf,"Library"],["Title 1 · 28/34",28,400,sf,"Library"],["Title 2 · 22/28",22,400,sf,"Library"],["Title 3 · 20/25",20,400,sf,"Library"],["Headline · 17/22 semibold",17,600,sf,"Library"],["Body · 17/22",17,400,sf,"Library"],["Callout · 16/21",16,400,sf,"Library"],["Subhead · 15/20",15,400,sf,"Library"],["Footnote · 13/18",13,400,sf,"Library"],["Caption 1 · 12/16",12,400,sf,"Library"],["Caption 2 · 11/13",11,400,sf,"Library"]]);
+ladder($('#ladder'),[["Display XL · 32",32,600,"'Libre Baskerville',serif"],["Display M · 20",20,600,"'Libre Baskerville',serif"],["Paragraph L · 18",18,400,"var(--body)"],["Paragraph M · 16",16,400,"var(--body)"],["Paragraph S · 14",14,400,"var(--body)"],["Paragraph XS · 12",12,400,"var(--body)"],["Paragraph XXS · 10",10,400,"var(--body)"]]);
+$('#gr').oninput=e=>$('#ov').style.setProperty('--g',e.target.value);
+const ms=$('#meas'),mz=$('#measure');
+function meas(){mz.style.maxWidth=ms.value+'px';const cpl=Math.round((+ms.value-34)/7.4);
+ $('#measOut').innerHTML='≈'+cpl+' chars '+(cpl<45?'<span class="chip w">too short</span>':cpl<=80?'<span class="chip g">good</span>':'<span class="chip b">too long</span>')}
+ms.oninput=meas;meas();
+
+/* contrast */
+function lum(h){const c=[1,3,5].map(i=>parseInt(h.slice(i,i+2),16)/255).map(v=>v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4));return .2126*c[0]+.7152*c[1]+.0722*c[2]}
+function cr(){const f=$('#fgC').value,b=$('#bgC').value,L1=lum(f),L2=lum(b),r=(Math.max(L1,L2)+.05)/(Math.min(L1,L2)+.05);
+ const s=$('#smp');s.style.color=f;s.style.background=b;$('#ratio').textContent=r.toFixed(2)+' : 1';
+ $('#verdict').innerHTML='<span class="chip '+(r>=4.5?'g':'b')+'">Body '+(r>=4.5?'pass':'fail')+'</span><span class="chip '+(r>=3?'g':'b')+'">Large/UI '+(r>=3?'pass':'fail')+'</span><span class="chip '+(r>=7?'g':'w')+'">AAA '+(r>=7?'pass':'—')+'</span>'}
+$('#fgC').oninput=cr;$('#bgC').oninput=cr;
+document.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{const[f,g]=b.dataset.p.split(',');$('#fgC').value=f;$('#bgC').value=g;cr()});cr();
+
+/* thumb */
+const bar=$('#ctaBar');
+function cta(bottom){$('#ctaTop').setAttribute('aria-pressed',!bottom);$('#ctaBot').setAttribute('aria-pressed',bottom);
+ bar.style.top=bottom?'356px':'22px';$('#ctaMsg').textContent=bottom?'In the green zone: one-handed tap, floating with a soft shadow.':'In the red zone: hard to reach with one hand.'}
+$('#ctaTop').onclick=()=>cta(false);$('#ctaBot').onclick=()=>cta(true);cta(false);
+
+/* loading picker */
+const loads=[
+ ['<p><b>Show nothing.</b> Under 1 second, an indicator just flickers and feels jittery. Show the result.</p>'],
+ ['<div class="skel"><div class="sk" style="width:40%;height:14px"></div><div class="sk"></div><div class="sk" style="width:85%"></div><div class="sk" style="width:60%"></div></div><p><b>Skeleton screen</b> for a full page: it previews the layout, so the wait feels shorter. Avoid "frame-only" skeletons that look broken.</p>'],
+ ['<div class="skel" style="place-items:center;align-content:center"><div class="spin" style="border-color:var(--line);border-top-color:var(--select);width:26px;height:26px;border-width:3px"></div></div><p><b>Spinner</b> for a single module, such as one card, a video or a chart.</p>'],
+ ['<div class="skel"><span class="mono">Uploading timetable.pdf</span><div class="bar-p"><div></div></div><span class="mono muted">62% · about 8 s left · <u>Cancel</u></span></div><p><b>Progress bar</b> with a time estimate and a cancel option, for long waits and for uploads, downloads or conversions.</p>']];
+function ld(i){document.querySelectorAll('[data-w]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.w==i));$('#loadOut').innerHTML=loads[i][0]}
+document.querySelectorAll('[data-w]').forEach(b=>b.onclick=()=>ld(+b.dataset.w));ld(1);
+
+/* form validation */
+function setErr(w,m,txt){const W=$(w),M=$(m);if(txt){W.classList.add('err');M.hidden=false;M.textContent='⚠ '+txt}else{W.classList.remove('err');M.hidden=true}}
+function vEmail(){const v=$('#fEmail').value.trim();if(!v)return 'Enter your college email.';if(!v.includes('@'))return 'That email is missing an "@". Try name@marwadiuniversity.ac.in.';if(!/@marwadiuniversity\.ac\.in$/i.test(v))return 'Use your college email ending in @marwadiuniversity.ac.in.';return ''}
+function vPass(){const v=$('#fPass').value;if(v.length<8)return 'Use at least 8 characters ('+v.length+' so far).';if(!/\d/.test(v))return 'Add at least one number.';return ''}
+$('#fEmail').addEventListener('blur',()=>setErr('#fEmailW','#fEmailMsg',vEmail()));
+$('#fPass').addEventListener('blur',()=>setErr('#fPassW','#fPassMsg',vPass()));
+$('#fEmail').addEventListener('input',()=>{if($('#fEmailW').classList.contains('err'))setErr('#fEmailW','#fEmailMsg',vEmail())});
+$('#fPass').addEventListener('input',()=>{if($('#fPassW').classList.contains('err'))setErr('#fPassW','#fPassMsg',vPass())});
+$('#fx').addEventListener('submit',e=>{e.preventDefault();const a=vEmail(),b=vPass();setErr('#fEmailW','#fEmailMsg',a);setErr('#fPassW','#fPassMsg',b);
+ $('#fOk').textContent=(!a&&!b)?'✓ Looks good. This is a demo, so nothing was sent.':'';if(a)$('#fEmail').focus();else if(b)$('#fPass').focus()});
+
+/* motion */
+const curves=[["linear","linear"],["standard","cubic-bezier(0.4,0,0.2,1)"],["decelerate","cubic-bezier(0,0,0.2,1)"],["accelerate","cubic-bezier(0.4,0,1,1)"]];
+const cv=$('#curves');curves.forEach(c=>{const r=document.createElement('div');r.className='curve-row';r.innerHTML='<span class="mono"><b>'+c[0]+'</b><br>'+c[1].replace('cubic-bezier','cb')+'</span><div class="track"><div class="dot"></div></div>';cv.appendChild(r)});
+let at=false;$('#playM').onclick=()=>{at=!at;cv.querySelectorAll('.dot').forEach((d,i)=>{const w=d.parentElement.clientWidth-44;
+ d.style.transition=reduce?'none':'transform 300ms '+curves[i][1];d.style.transform=at?'translateX('+w+'px)':'translateX(0)'})};
+
+/* iterations */
+const days=[["Mon","Lemon pasta","25 min · 520 kcal"],["Tue","Chana masala","40 min · 480 kcal"],["Wed","Shakshuka","30 min · 420 kcal"],["Thu","Veg pulao","35 min · 510 kcal"]];
+function screen(v){let h='';
+ if(v===0){h='<div style="background:#FBF3E6;height:100%;color:#000"><div class="hd" style="padding-bottom:8px">Your weekly menu</div><div style="margin:0 10px 6px;background:#000;color:#fff;font:700 10px var(--body);border-radius:4px;padding:6px;text-align:center">GENERATE LIST</div>'+days.map(d=>'<div style="border-top:2px solid #D9393E;padding:7px 10px;font-size:9.5px;font-weight:700">'+d[0]+' — '+d[1]+'<div style="font-weight:400">'+d[2]+'. Tap to view the recipe details and ingredients.</div></div>').join('')+'</div>'}
+ if(v===1){h='<div style="background:#fff;height:100%;color:#3D4350"><div class="hd">Your weekly menu</div><div style="margin:2px 10px 6px;background:#D9393E;color:#fff;font:500 10px var(--body);border-radius:8px;padding:7px;text-align:center">Generate list</div>'+days.map(d=>'<div class="mrow" style="border-top:1px solid rgba(217,57,62,.12)"><div class="badge" style="background:#FBEFE3;color:#D9393E">'+d[0]+'</div><div><b>'+d[1]+'</b><br>'+d[2]+'</div></div>').join('')+'</div>'}
+ if(v===2){h='<div style="background:#fff;height:100%;color:#3D4350"><div class="hd">Your weekly menu</div><div style="margin:2px 10px 6px;background:#D9393E;color:#fff;font:500 10px var(--body);border-radius:8px;padding:7px;text-align:center">Generate list</div>'+days.map(d=>'<div class="mrow" style="border-top:1px solid rgba(217,57,62,.12)"><div style="display:grid;gap:2px;text-align:center"><span style="font:600 7px var(--mono);color:#8b909b">'+d[0].toUpperCase()+'</span><div class="ph" style="width:30px;height:30px;border:1.5px solid #D9393E"></div></div><div><b>'+d[1]+'</b><br>'+d[2]+'</div></div>').join('')+'</div>'}
+ if(v===3){h='<div style="background:#fff;height:100%;color:#3D4350;position:relative"><div class="hd">Your weekly menu</div>'+days.slice(0,3).map(d=>'<div style="margin:0 10px 8px;position:relative;height:84px;border-radius:10px;overflow:hidden" class="ph"><div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.65),transparent 70%)"></div><div style="position:absolute;left:8px;bottom:6px;color:#fff;font-size:9px;line-height:1.3"><span style="font:600 7px var(--mono);opacity:.85">'+d[0].toUpperCase()+'</span><br><b style="font-size:12px">'+d[1]+'</b><br>'+d[2]+'</div></div>').join('')+'<div style="position:absolute;left:10px;right:10px;bottom:10px;background:#D9393E;color:#fff;font:600 10px var(--body);border-radius:10px;padding:9px;text-align:center;box-shadow:0 6px 14px rgba(0,0,0,.25)">Generate list</div></div>'}
+ return h}
+const inotes=[["Before","Cream background, pure black, heavy red dividers, CTA in the header. Text-heavy."],
+ ["Iteration 1","White, dark grey, 4px spacing, medium-weight CTA, 10% dividers, day badges."],
+ ["Iteration 2","Food photos break up the text. Grey caps day labels above each image."],
+ ["Iteration 3 + CTA","Images 3× larger with a black gradient and white text. Dividers removed. CTA floats at the bottom."]];
+const it=$('#iters');inotes.forEach((n,i)=>{const d=document.createElement('div');d.className='iter';d.innerHTML='<div class="mphone">'+screen(i)+'</div><div class="label" style="color:var(--redline)">'+n[0]+'</div><p>'+n[1]+'</p>';it.appendChild(d)});
+
+/* 5-user curve */
+const c5=$('#curve5');for(let n=1;n<=8;n++){const p=Math.round((1-Math.pow(1-0.31,n))*100);const d=document.createElement('div');d.style.height=p+'%';if(n===5)d.style.background='var(--redline)';d.innerHTML='<span>'+p+'%</span>';c5.appendChild(d)}
+
+/* components */
+document.querySelectorAll('[data-b]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-b]').forEach(x=>x.setAttribute('aria-pressed','false'));b.setAttribute('aria-pressed','true');document.querySelectorAll('.bp').forEach(p=>p.style.background=b.dataset.b)});
+document.querySelectorAll('.bp').forEach(p=>p.style.background='#D9393E');
+
+/* checklist */
+const groups=[["Layout",["Every spacing value is on the 4/8 scale","Space inside groups is smaller than space between them","Aligned to a layout grid; not everything centred","No information repeated; dividers quiet or removed"]],
+ ["Type & colour",["Two fonts at most; few weights; clear size steps","Body text ≥ 16px web / 17pt iOS; lines 50–75 characters","60-30-10 split, with one accent reserved for the primary action","All text passes 4.5:1 (3:1 large/UI), in light and dark","No meaning carried by colour alone"]],
+ ["Interaction",["Primary action in the thumb zone; targets 44–48","Every component has all its states drawn","Loading, empty and error states designed","Form labels visible; errors specific and next to the field","Motion under 400 ms, with a reduce-motion version"]],
+ ["Process",["Checked against Nielsen's 10 heuristics","Tested with 5 people; blockers fixed","Built with frames, auto layout, components, variables","Checked by fresh eyes"]]];
+let saved=[];try{saved=JSON.parse(localStorage.getItem('uxbible-check2')||'[]')}catch(e){}
+const ck=$('#checkList');let idx=0;
+groups.forEach(g=>{const h=document.createElement('h4');h.textContent=g[0];ck.appendChild(h);
+ g[1].forEach(t=>{const i=idx++;const l=document.createElement('label');l.innerHTML='<input type="checkbox" id="ck'+i+'"'+(saved.includes(i)?' checked':'')+'><span>'+t+'</span>';ck.appendChild(l)})});
+function upd(){const all=[...ck.querySelectorAll('input')];const on=all.map((c,i)=>c.checked?i:-1).filter(i=>i>=0);$('#prog').style.width=(on.length/all.length*100)+'%';try{localStorage.setItem('uxbible-check2',JSON.stringify(on))}catch(e){}}
+ck.onchange=upd;upd();
+
+/* tools */
+const tools=[["Design","Figma (main), Framer (sites, portfolio)"],["UX patterns","Mobbin, used on every project"],["Mood & assets","Pinterest, Canva, Cosmos"],["Web inspiration","Godly, Awwwards, Bento Grids, Httpster, Minimal Gallery, Superhero, Landing.gallery, Call to Inspiration"],["Fresh eyes","Public.work, Doing Cool Stuff, coffee-shop menus, real-world photos"],["Motion","60fps, Ripplix"],["Colour","WebGradients, Open Color, Happy Hues, Color Designer, Palette Maker, ColorHunt"],["Type","Google Fonts, Canva pairings, Unblast"],["Icons & photos","Iconify, Lucide, Iconoir, Phosphor, Unsplash plugin"],["Illustration","Procreate + Animation Assist"],["Design → code","Claude Code, Cursor, Paper, Figma Make, Replit, Anything"],["Eye training","type / shape / color / bezier .method.ac, pixact.ly"],["Standards","NN/g articles, Apple HIG, Material Design, WCAG 2.2, lawsofux.com"]];
+const tl=$('#tools');tools.forEach(t=>{const d=document.createElement('div');d.className='tool';d.innerHTML='<b>'+t[0]+'</b>'+t[1];tl.appendChild(d)});
+})();
+</script>
+
+</body></html>
